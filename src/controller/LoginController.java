@@ -12,6 +12,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JOptionPane;
 import view.LoginView;
 import model.LoginModel;
+import view.PrincipalView;
 
 /**
  *
@@ -22,6 +23,8 @@ public class LoginController implements ActionListener, KeyListener {
 	String user, password;
 	LoginView login;
 	LoginModel loginModel;
+	MenuController menuController;
+	PrincipalView principalView;
 
 	public LoginController(LoginView login, LoginModel loginModel) {
 		this.loginModel = loginModel;
@@ -43,7 +46,10 @@ public class LoginController implements ActionListener, KeyListener {
 		this.loginModel.setPassword(password);
 		this.loginModel.validar();
 		if (this.loginModel.validar) {
-			JOptionPane.showMessageDialog(null, this.loginModel.getUser());
+			this.login.dispose();
+			this.principalView = new PrincipalView();
+			this.menuController = new MenuController(this.principalView);
+			this.menuController.start();
 		} else {
 		}
 	}

@@ -6,6 +6,8 @@
 package model;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -69,13 +71,44 @@ public class LoginModel extends Conexion {
 			this.rs = this.pst.executeQuery();
 			if (!this.rs.isBeforeFirst()) {
 				this.validar = false;
-				JOptionPane.showMessageDialog(null, "El usuario no existe");
+				this.getDatosUsuario();
 			} else {
 				this.validar = true;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}finally{
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(LoginModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 	}
 
+	public void getDatosUsuario(){
+		this.cn = conexion();
+		this.consulta = "SELECT * FROM usuarios WHERE usuario = ? AND password = ?";
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setString(1, this.usuario);
+			this.pst.setString(2, this.password);
+			this.rs = this.pst.executeQuery();
+			while(this.rs.next()){
+				this.usuario = this.rs.getString("usuario");
+				this.empleado = this.rs.getInt("empleado");
+				this.permiso = this.rs.getString("permiso");
+			}
+
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "ERROR : en el metodo getDatosUsuario en el modelo login -> " + e);
+			e.printStackTrace();
+		}finally{
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(LoginModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
 }
