@@ -109,6 +109,28 @@ public class EmpleadosModel extends Conexion {
 		}
 	}
 
+	public void eliminar(){
+		this.cn = conexion();
+		this.consulta = "DELETE FROM empleados WHERE id = ?";
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setInt(1, this.id);
+			this.banderin = this.pst.executeUpdate();
+			if(this.banderin>0){
+				JOptionPane.showMessageDialog(null, "empleado eliminado exitosamente");
+			}
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Oops.. error al intentar eliminar empleado -> " +e);
+			e.printStackTrace();
+		}finally{
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(EmpleadosModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+
 	public void editar() {
 		this.cn = conexion();
 		this.consulta = "SELECT * FROM empleados WHERE id = ?";

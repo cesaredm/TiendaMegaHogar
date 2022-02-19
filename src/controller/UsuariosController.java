@@ -86,11 +86,13 @@ public class UsuariosController implements ActionListener, CaretListener, MouseL
 	}
 
 	public void mostrar(String value) {
+		EstiloTablas.estilosCabeceras(this.menu.tblUsuarios);
 		this.usuarioModel.mostrar(value);
 		this.menu.tblUsuarios.setModel(this.usuarioModel.getTableMode());
 	}
 
 	public void mostrarEmpleados(String value) {
+		EstiloTablas.estilosCabeceras(this.menu.tblEmpleadosUsuario);
 		this.usuarioModel.empleados(value);
 		this.menu.tblEmpleadosUsuario.setModel(this.usuarioModel.getTableModelEmpleados());
 	}

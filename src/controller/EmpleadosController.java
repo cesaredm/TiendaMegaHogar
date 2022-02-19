@@ -8,6 +8,7 @@ package controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.security.cert.CRLSelector;
+import javax.swing.JOptionPane;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import view.PrincipalView;
@@ -33,6 +34,7 @@ public class EmpleadosController implements ActionListener, CaretListener {
 		this.menu.btnLimpiarEmpleado.addActionListener(this);
 		this.menu.btnActualizarEmpleado.addActionListener(this);
 		this.menu.optEditarEmpleado.addActionListener(this);
+		this.menu.optEliminarEmpleado.addActionListener(this);
 		this.menu.txtBuscarEmpleado.addCaretListener(this);
 	}
 
@@ -88,7 +90,28 @@ public class EmpleadosController implements ActionListener, CaretListener {
 		}
 	}
 
+	public void eliminar() {
+		this.filaseleccionada = this.menu.tblEmpleados.getSelectedRow();
+		if (this.filaseleccionada != -1) {
+			int confirmar = JOptionPane.showConfirmDialog(
+				null,
+				"Seguro que quieres eliminar este empleado",
+				"Advertencia",
+				JOptionPane.OK_CANCEL_OPTION
+			);
+			if (confirmar == JOptionPane.YES_OPTION) {
+				this.empleadosModel.setId(
+					Integer.parseInt(this.menu.tblEmpleados.getValueAt(filaseleccionada, 0).toString())
+				);
+				this.empleadosModel.eliminar();
+				this.mostrar("");
+			}
+
+		}
+	}
+
 	private void mostrar(String value) {
+		EstiloTablas.estilosCabeceras(this.menu.tblEmpleados);
 		this.empleadosModel.mostrar(value);
 		this.menu.tblEmpleados.setModel(empleadosModel.getTableModel());
 	}
@@ -108,9 +131,14 @@ public class EmpleadosController implements ActionListener, CaretListener {
 				this.editar();
 			}
 			break;
-			case "btnActualizarEmpleado":{
+			case "btnActualizarEmpleado": {
 				this.actualizar();
-			}break;
+			}
+			break;
+			case "optEliminarEmpleado": {
+				this.eliminar();
+			}
+			break;
 		}
 	}
 

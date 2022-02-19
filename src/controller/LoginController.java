@@ -48,7 +48,7 @@ public class LoginController implements ActionListener, KeyListener {
 		if (this.loginModel.validar) {
 			this.login.dispose();
 			this.principalView = new PrincipalView();
-			this.menuController = new MenuController(this.principalView);
+			this.menuController = new MenuController(this.principalView,this.loginModel.getUser(),this.loginModel.getEmpleado());
 			this.menuController.start();
 		} else {
 		}
