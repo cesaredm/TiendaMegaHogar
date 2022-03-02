@@ -30,6 +30,7 @@ public class MarcasController implements ActionListener, CaretListener, KeyListe
 		this.marcasModel = marcasModel;
 		this.menu.btnActualizarMarca.setEnabled(false);
 		this.mostrar("");
+		this.mostrarMarcasEnProductos();
 		this.menu.btnGuardarMarca.addActionListener(this);
 		this.menu.btnActualizarMarca.addActionListener(this);
 		this.menu.optEditarMarca.addActionListener(this);
@@ -38,11 +39,10 @@ public class MarcasController implements ActionListener, CaretListener, KeyListe
 		this.menu.txtBuscarMarca.addCaretListener(instancia);
 	}
 
-	public static MarcasController getInsancia(PrincipalView menu, MarcasModel marcasModel) {
+	public static void createInstanceController(PrincipalView menu, MarcasModel marcasModel) {
 		if (instancia == null) {
 			instancia = new MarcasController(menu, marcasModel);
 		}
-		return instancia;
 	}
 
 	public void limpiar(boolean limpiar) {

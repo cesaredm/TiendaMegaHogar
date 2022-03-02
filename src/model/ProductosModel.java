@@ -12,6 +12,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
+
 /**
  *
  * @author CESAR DIAZ MARADIAGA
@@ -287,6 +288,28 @@ public class ProductosModel extends Conexion {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(ProductosModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+
+	public void agregarInventario(float cantidad){
+		this.cn = conexion();
+		this.consulta = "UPDATE productos SET stock = stock + ? WHERE id = ?";
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setFloat(1, cantidad);
+			this.pst.setInt(2, this.id);
+			this.banderin = this.pst.executeUpdate();
+			if(this.banderin > 0){
+				JOptionPane.showMessageDialog(null, "Inventario agrgado con exito.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
 			try {
 				this.cn.close();
 			} catch (SQLException ex) {

@@ -22,23 +22,26 @@ public class MenuController implements MouseListener, KeyListener {
 	UsuariosModel usuarioModel;
 	EmpleadosModel empleadosModel;
 	ProductosModel productosModel;
+	KardexModel kardex;
 	MarcasModel marcasModel;
-	UsuariosController usuarioController = null;
-	EmpleadosController empleadosController = null;
-	ProductosController productosController = null;
-	MarcasController marcasController = null;
+	ClientesModel clientesModel;
+	public static int empleadoSistema;
 
 	public MenuController(PrincipalView menu, String usuario, int empleado) {
 		this.menu = menu;
+		MenuController.empleadoSistema = empleado;
 		this.menu.lblUsuarioSistema.setText(usuario);
 		this.usuarioModel = new UsuariosModel();
 		this.empleadosModel = new EmpleadosModel();
 		this.productosModel = new ProductosModel();
+		this.kardex = new KardexModel();
 		this.marcasModel = new MarcasModel();
+		this.clientesModel = new ClientesModel();
 		this.ocultarPaneles();
 		this.menu.pnlOpcionUsuario.addMouseListener(this);
 		this.menu.pnlOpcionEmpleados.addMouseListener(this);
 		this.menu.pnlOpcionInventario.addMouseListener(this);
+		this.menu.pnlOpcionClientes.addMouseListener(this);
 
 	}
 
@@ -51,31 +54,51 @@ public class MenuController implements MouseListener, KeyListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource() == this.menu.pnlOpcionUsuario) {
-			this.usuarioController = UsuariosController.getInstancia(this.menu, this.usuarioModel);
+			UsuariosController.createInstanceController(this.menu, this.usuarioModel);
 			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(0, 102, 255));
 			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0,102,204));
+			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlUsuarios.setVisible(true);
 			this.menu.pnlEmpleados.setVisible(false);
 			this.menu.pnlInventario.setVisible(false);
+			this.menu.pnlClientesCreditos.setVisible(false);
 		} else if (e.getSource() == this.menu.pnlOpcionEmpleados) {
-			this.empleadosController = EmpleadosController.getInstancia(menu, empleadosModel);
+			EmpleadosController.createInstanceController(menu, empleadosModel);
 			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(0, 102, 255));
 			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0,102,204));
+			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlEmpleados.setVisible(true);
 			this.menu.pnlUsuarios.setVisible(false);
 			this.menu.pnlInventario.setVisible(false);
-		}else if(e.getSource() == this.menu.pnlOpcionInventario){
-			this.productosController = ProductosController.getInstancia(menu, productosModel);
-			this.marcasController = MarcasController.getInsancia(menu, marcasModel);
-			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0,102,255));
+			this.menu.pnlClientesCreditos.setVisible(false);
+		} else if (e.getSource() == this.menu.pnlOpcionInventario) {
+			ProductosController.createInstanceController(menu, productosModel, kardex);
+			MarcasController.createInstanceController(menu, marcasModel);
+			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0, 102, 255));
 			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlInventario.setVisible(true);
 			this.menu.pnlEmpleados.setVisible(false);
 			this.menu.pnlUsuarios.setVisible(false);
+			this.menu.pnlClientesCreditos.setVisible(false);
+		} else if (e.getSource() == this.menu.pnlOpcionClientes) {
+			ClientesController.createInstanceController(menu, clientesModel);
+			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(0, 102, 255));
+			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlClientesCreditos.setVisible(true);
+			this.menu.pnlInventario.setVisible(false);
+			this.menu.pnlEmpleados.setVisible(false);
+			this.menu.pnlUsuarios.setVisible(false);
 		}
+	}
+
+	public void start() {
+		this.menu.setVisible(true);
 	}
 
 	@Override
@@ -93,10 +116,6 @@ public class MenuController implements MouseListener, KeyListener {
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-	}
-
-	public void start() {
-		this.menu.setVisible(true);
 	}
 
 	@Override

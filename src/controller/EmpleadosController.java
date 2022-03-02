@@ -38,11 +38,10 @@ public class EmpleadosController implements ActionListener, CaretListener {
 		this.menu.txtBuscarEmpleado.addCaretListener(this);
 	}
 
-	public static EmpleadosController getInstancia(PrincipalView menu, EmpleadosModel empleadosModel) {
+	public static void createInstanceController(PrincipalView menu, EmpleadosModel empleadosModel) {
 		if (instancia == null) {
 			instancia = new EmpleadosController(menu, empleadosModel);
 		}
-		return instancia;
 	}
 
 	public void limpiar(boolean l) {

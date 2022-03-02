@@ -48,11 +48,10 @@ public class UsuariosController implements ActionListener, CaretListener, MouseL
 	}
 
 	/* SINGLENTON */
-	public static UsuariosController getInstancia(PrincipalView menu, UsuariosModel usuarioModel) {
+	public static void createInstanceController(PrincipalView menu, UsuariosModel usuarioModel) {
 		if (usuariosController == null) {
 			usuariosController = new UsuariosController(menu, usuarioModel);
 		}
-		return usuariosController;
 	}
 
 	/*CRUD*/

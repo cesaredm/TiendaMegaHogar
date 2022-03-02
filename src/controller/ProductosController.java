@@ -7,36 +7,45 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.text.DecimalFormat;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerModel;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import java.util.Date;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import model.CmbMarcas;
 import model.ProductosModel;
+import model.KardexModel;
 import view.PrincipalView;
 
 /**
  *
  * @author CESAR DIAZ MARADIAGA
  */
-public class ProductosController implements ActionListener, CaretListener{
+public class ProductosController implements ActionListener, CaretListener {
 
 	private static ProductosController instancia = null;
 	PrincipalView menu;
 	ProductosModel productosModel;
+	KardexModel kardex;
 	DefaultComboBoxModel comboModel;
 	CmbMarcas marcas;
-	int filaseleccionada;
+	int filaseleccionada, id;
+	float cantidadAgregar;
+	JSpinner spiner;
+	SpinnerNumberModel spinnerModel;
+	DecimalFormat numberFormat;
 
-	private ProductosController(PrincipalView menu, ProductosModel productosModel) {
+	private ProductosController(PrincipalView menu, ProductosModel productosModel, KardexModel kardex) {
 		this.menu = menu;
 		this.productosModel = productosModel;
+		this.kardex = kardex;
+		this.numberFormat = new DecimalFormat("#,###,###,###,#00.0");
 		this.menu.btnActualizarProducto.setEnabled(false);
-		this.mostrarMarcas();
 		this.mostrar("");
 		this.menu.jifMarca.setVisible(false);
 		this.menu.btnAgregarMarca.addActionListener(this);
@@ -46,13 +55,20 @@ public class ProductosController implements ActionListener, CaretListener{
 		this.menu.optEliminarProducto.addActionListener(this);
 		this.menu.btnActualizarProducto.addActionListener(this);
 		this.menu.txtBuscarProducto.addCaretListener(this);
+		this.menu.optAgregarProducto.addActionListener(this);
+		this.menu.optKardexProducto.addActionListener(this);
+		/* crear spinner para agregar producto a inventario */
+		this.spinnerModel = new SpinnerNumberModel();
+		this.spinnerModel.setValue(0.0);
+		this.spinnerModel.setMinimum(0.0);
+		this.spinnerModel.setStepSize(0.01);
+		this.spiner = new JSpinner(spinnerModel);
 	}
 
-	public static ProductosController getInstancia(PrincipalView menu, ProductosModel productosModel) {
+	public static void createInstanceController(PrincipalView menu, ProductosModel productosModel, KardexModel kardex) {
 		if (instancia == null) {
-			instancia = new ProductosController(menu, productosModel);
+			instancia = new ProductosController(menu, productosModel, kardex);
 		}
-		return instancia;
 	}
 
 	public void limpiar(boolean limpiar) {
@@ -79,6 +95,7 @@ public class ProductosController implements ActionListener, CaretListener{
 		this.productosModel.setPrecioVenta((float) this.menu.jsPrecioVentaProducto.getValue());
 		this.productosModel.setStock((float) this.menu.jsCantidadProducto.getValue());
 		this.productosModel.guardar();
+		this.guardarKardex(this.productosModel.validar, this.kardex.getLastProducto(), this.productosModel.getStock(), "Inicial");
 		this.limpiar(this.productosModel.validar);
 		this.mostrar("");
 	}
@@ -110,6 +127,7 @@ public class ProductosController implements ActionListener, CaretListener{
 		this.productosModel.setPrecioVenta((float) this.menu.jsPrecioVentaProducto.getValue());
 		this.productosModel.setStock((float) this.menu.jsCantidadProducto.getValue());
 		this.productosModel.actualizar();
+		this.guardarKardex(this.productosModel.validar, this.productosModel.getId(), this.productosModel.getStock(), "Actualización");
 		this.limpiar(this.productosModel.validar);
 		this.mostrar("");
 	}
@@ -136,9 +154,54 @@ public class ProductosController implements ActionListener, CaretListener{
 		this.menu.tblProductos.setModel(this.productosModel.tableModelProductos);
 	}
 
-	public void mostrarMarcas() {
-		this.productosModel.getMarcas();
-		this.menu.cmbMarcasProducto.setModel(this.productosModel.comboModel);
+	public void agregarProductoInventario() {
+		this.filaseleccionada = this.menu.tblProductos.getSelectedRow();
+		if (this.filaseleccionada != -1) {
+			this.id = Integer.parseInt(this.menu.tblProductos.getValueAt(this.filaseleccionada, 0).toString());
+			JOptionPane.showMessageDialog(null, this.spiner, "Agregar inventario", JOptionPane.INFORMATION_MESSAGE);
+			this.cantidadAgregar = Float.parseFloat(this.spiner.getValue().toString());
+			if (this.cantidadAgregar > 0) {
+				this.productosModel.setId(this.id);
+				this.productosModel.agregarInventario(this.cantidadAgregar);
+				this.guardarKardex(true, this.id, this.cantidadAgregar, "Agrego");
+				this.mostrar("");
+			}
+		}
+	}
+
+	public void guardarKardex(boolean confirmacion, int producto, float cantidad, String accion) {
+		if (confirmacion) {
+			long fecha = new Date().getTime();
+			this.kardex.setProducto(producto);
+			this.kardex.setCantidad(cantidad);
+			this.kardex.setFecha(new java.sql.Timestamp(fecha));
+			this.kardex.setAccion(accion);
+			this.kardex.setEmpleado(MenuController.empleadoSistema);
+			this.kardex.guardar();
+		}
+	}
+
+	public void mostrarKardex() {
+		this.filaseleccionada = this.menu.tblProductos.getSelectedRow();
+		if (this.filaseleccionada != -1) {
+			EstiloTablas.estilosCabeceras(this.menu.tblSalidasKardex);
+			EstiloTablas.estilosCabeceras(this.menu.tblOtrosMovimientosKardex);
+			this.id = Integer.parseInt(this.menu.tblProductos.getValueAt(this.filaseleccionada, 0).toString());
+			this.menu.lblInventarioActual.setText((String) this.menu.tblProductos.getValueAt(this.filaseleccionada, 7));
+			this.menu.lblNombreProductoKardex.setText((String) this.menu.tblProductos.getValueAt(this.filaseleccionada, 2));
+			this.kardex.entradasSalidasInicial(this.id);
+			this.kardex.salidas(this.id);
+			this.menu.lblEntradasKardex.setText(this.numberFormat.format(this.kardex.getEntradas()));
+			this.menu.lblSalidasKardex.setText(this.numberFormat.format(this.kardex.getSalidas()));
+			this.menu.lblKardexInicial.setText(this.numberFormat.format(this.kardex.getInventarioInicial()));
+			this.menu.tblSalidasKardex.setModel(this.kardex.tableModel);
+			this.kardex.otrosMovimientos(this.id);
+			this.menu.tblOtrosMovimientosKardex.setModel(this.kardex.tableModel);
+			this.menu.jdKardex.setSize(1108, 473);
+			this.menu.jdKardex.setLocationRelativeTo(null);
+			this.menu.jdKardex.setVisible(true);
+		}
+
 	}
 
 	@Override
@@ -166,6 +229,14 @@ public class ProductosController implements ActionListener, CaretListener{
 			break;
 			case "optEliminarProducto": {
 				this.eliminar();
+			}
+			break;
+			case "optKardexProducto": {
+				this.mostrarKardex();
+			}
+			break;
+			case "optAgregarProducto": {
+				this.agregarProductoInventario();
 			}
 			break;
 		}

@@ -71,9 +71,9 @@ public class LoginModel extends Conexion {
 			this.rs = this.pst.executeQuery();
 			if (!this.rs.isBeforeFirst()) {
 				this.validar = false;
-				this.getDatosUsuario();
 			} else {
 				this.validar = true;
+				this.getDatosUsuario();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
