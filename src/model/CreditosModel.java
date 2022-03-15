@@ -1,0 +1,318 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package model;
+
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author CESAR DIAZ MARADIAGA
+ */
+public class CreditosModel extends Conexion {
+
+	private Timestamp fecha;
+	private int cliente, aval, id, banderin;
+	private String estado, consulta;
+	public boolean validar;
+	private String[] datos;
+
+	private Statement st;
+	private PreparedStatement pst;
+	private ResultSet rs;
+	private Connection cn;
+	public DefaultTableModel tableModel;
+
+	public CreditosModel() {
+
+	}
+
+	public Timestamp getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Timestamp fecha) {
+		this.fecha = fecha;
+	}
+
+	public int getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(int cliente) {
+		this.cliente = cliente;
+	}
+
+	public int getAval() {
+		return aval;
+	}
+
+	public void setAval(int aval) {
+		this.aval = aval;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+
+	public void validar() {
+		if (fecha.equals("")) {
+			this.validar = false;
+		} else if (cliente == 0) {
+			this.validar = false;
+		} else {
+			this.validar = aval != 0;
+		}
+	}
+
+	public void guardar() {
+		this.validar();
+		if (this.validar) {
+			this.cn = conexion();
+			this.consulta = "INSERT INTO creditos(fecha,cliente,aval,estado) VALUES(?,?,?,?)";
+			try {
+				this.pst = this.cn.prepareStatement(this.consulta);
+				this.pst.setTimestamp(1, this.fecha);
+				this.pst.setInt(2, this.cliente);
+				this.pst.setInt(3, this.aval);
+				this.pst.setString(4, this.estado);
+				this.banderin = this.pst.executeUpdate();
+				if (this.banderin > 0) {
+					JOptionPane.showMessageDialog(null, "Cuenta de credito creada con exito.");
+				}
+			} catch (SQLException e) {
+				JOptionPane.showMessageDialog(null, "Oops.. error al intentar crear la cuenta de credito. -> " + e);
+				e.printStackTrace();
+			} finally {
+				try {
+					this.cn.close();
+				} catch (SQLException ex) {
+					Logger.getLogger(CreditosModel.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+		}
+	}
+
+	public void editar() {
+		this.cn = conexion();
+		this.consulta = "SELECT * FROM creditos WHERE id = ?";
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setInt(1, this.id);
+			this.rs = this.pst.executeQuery();
+			while (this.rs.next()) {
+				this.fecha = this.rs.getTimestamp("fecha");
+				this.cliente = this.rs.getInt("cliente");
+				this.aval = this.rs.getInt("aval");
+				this.estado = this.rs.getString("estado");
+			}
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Oops.. error al intentar editar cuenta. -> " + e);
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(CreditosModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+
+	public void actualizar() {
+		this.validar();
+		if (this.validar) {
+			this.cn = conexion();
+			this.consulta = "UPDATE creditos SET fecha=?,cliente=?,aval=?,estado=? WHERE id = ?";
+			try {
+				this.pst = this.cn.prepareStatement(this.consulta);
+				this.pst.setTimestamp(1, this.fecha);
+				this.pst.setInt(2, this.cliente);
+				this.pst.setInt(3, this.aval);
+				this.pst.setString(4, this.estado);
+				this.pst.setInt(5, this.id);
+				this.banderin = this.pst.executeUpdate();
+				if (this.banderin > 0) {
+					JOptionPane.showMessageDialog(null, "Cuenta de credito actualizada con exito.");
+				}
+			} catch (SQLException e) {
+				JOptionPane.showMessageDialog(null, "Oops.. error al intentar actualizar la cuenta de credito. -> " + e);
+				e.printStackTrace();
+			} finally {
+				try {
+					this.cn.close();
+				} catch (SQLException ex) {
+					Logger.getLogger(CreditosModel.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+		}
+	}
+
+	public void isPendiente() {
+		this.cn = conexion();
+		this.consulta = "SELECT estado FROM creditos WHERE id = ?";
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setInt(1, this.id);
+			this.rs = this.pst.executeQuery();
+			while (this.rs.next()) {
+				if (this.rs.getString("estado").equals("abierto")) {
+					this.eliminar();
+				} else {
+					JOptionPane.showMessageDialog(
+						null,
+						"Oops.. la cuenta de credito no se puede eliminar porque aun se encuentra pendiente."
+					);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(CreditosModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+
+	public void eliminar() {
+		this.cn = conexion();
+		this.consulta = "DELETE FROM creditos WHERE id = ?";
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setInt(1, this.id);
+			this.banderin = this.pst.executeUpdate();
+			if (this.banderin > 0) {
+				JOptionPane.showMessageDialog(null, "Cuenta eliminada con exito.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(CreditosModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+
+	public void mostrar(String value) {
+		this.cn = conexion();
+		this.consulta = "SELECT c.id,cl.nombres,cl.apellidos,c.fecha,c.estado FROM creditos AS c INNER JOIN clientes AS cl ON(c.cliente=cl.id)"
+			+ " WHERE CONCAT(c.id,cl.nombres) LIKE ? ORDER BY c.id DESC LIMIT 30";
+		String[] titulos = {"N° CREDITO", "CLIENTE", "FECHA DE APERTURA", "ESTADO"};
+		this.datos = new String[4];
+		this.tableModel = new DefaultTableModel(null, titulos) {
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				return false;
+			}
+		};
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setString(1, "%" + value + "%");
+			this.rs = this.pst.executeQuery();
+			while (this.rs.next()) {
+				this.datos[0] = this.rs.getString("id");
+				this.datos[1] = this.rs.getString("nombres") + " " + this.rs.getString("apellidos");
+				this.datos[2] = this.rs.getString("fecha");
+				this.datos[3] = this.rs.getString("estado");
+				this.tableModel.addRow(datos);
+			}
+		} catch (Exception e) {
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(CreditosModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+
+	}
+
+	public void getAvales(String value) {
+		this.cn = conexion();
+		this.consulta = "SELECT id,nombres,apellidos,dni FROM avales WHERE nombres LIKE ? LIMIT 20";
+		String[] titulos = {"ID", "NOMBRE COMPLETO", "DNI"};
+		this.datos = new String[3];
+		this.tableModel = new DefaultTableModel(null, titulos) {
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				return false;
+			}
+		};
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setString(1, "%" + value + "%");
+			this.rs = this.pst.executeQuery();
+			while (this.rs.next()) {
+				this.datos[0] = this.rs.getString("id");
+				this.datos[1] = this.rs.getString("nombres") + " " + this.rs.getString("apellidos");
+				this.datos[2] = this.rs.getString("dni");
+				this.tableModel.addRow(datos);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(CreditosModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+
+	public void getClientes(String value) {
+		this.cn = conexion();
+		this.consulta = "SELECT id,nombres,apellidos,dni FROM clientes WHERE nombres LIKE ? LIMIT 20";
+		String[] titulos = {"ID", "NOMBRE COMPLETO", "DNI"};
+		this.datos = new String[3];
+		this.tableModel = new DefaultTableModel(null, titulos) {
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				return false;
+			}
+		};
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setString(1, "%" + value + "%");
+			this.rs = this.pst.executeQuery();
+			while (this.rs.next()) {
+				this.datos[0] = this.rs.getString("id");
+				this.datos[1] = this.rs.getString("nombres") + " " + this.rs.getString("apellidos");
+				this.datos[2] = this.rs.getString("dni");
+				this.tableModel.addRow(datos);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(CreditosModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+
+	public void creditosPendientes() {
+
+	}
+}

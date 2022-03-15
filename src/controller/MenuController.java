@@ -25,6 +25,8 @@ public class MenuController implements MouseListener, KeyListener {
 	KardexModel kardex;
 	MarcasModel marcasModel;
 	ClientesModel clientesModel;
+	CreditosModel creditosModel;
+	FacturacionModel facturacionModel;
 	public static int empleadoSistema;
 
 	public MenuController(PrincipalView menu, String usuario, int empleado) {
@@ -37,11 +39,14 @@ public class MenuController implements MouseListener, KeyListener {
 		this.kardex = new KardexModel();
 		this.marcasModel = new MarcasModel();
 		this.clientesModel = new ClientesModel();
+		this.creditosModel = new CreditosModel();
+		this.facturacionModel = new FacturacionModel();
 		this.ocultarPaneles();
 		this.menu.pnlOpcionUsuario.addMouseListener(this);
 		this.menu.pnlOpcionEmpleados.addMouseListener(this);
 		this.menu.pnlOpcionInventario.addMouseListener(this);
 		this.menu.pnlOpcionClientes.addMouseListener(this);
+		this.menu.pnlOpcionFacturacion.addMouseListener(this);
 
 	}
 
@@ -59,20 +64,24 @@ public class MenuController implements MouseListener, KeyListener {
 			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionFacturacion.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlUsuarios.setVisible(true);
 			this.menu.pnlEmpleados.setVisible(false);
 			this.menu.pnlInventario.setVisible(false);
 			this.menu.pnlClientesCreditos.setVisible(false);
+			this.menu.pnlFacturacion.setVisible(false);
 		} else if (e.getSource() == this.menu.pnlOpcionEmpleados) {
 			EmpleadosController.createInstanceController(menu, empleadosModel);
 			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(0, 102, 255));
 			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionFacturacion.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlEmpleados.setVisible(true);
 			this.menu.pnlUsuarios.setVisible(false);
 			this.menu.pnlInventario.setVisible(false);
 			this.menu.pnlClientesCreditos.setVisible(false);
+			this.menu.pnlFacturacion.setVisible(false);
 		} else if (e.getSource() == this.menu.pnlOpcionInventario) {
 			ProductosController.createInstanceController(menu, productosModel, kardex);
 			MarcasController.createInstanceController(menu, marcasModel);
@@ -80,17 +89,34 @@ public class MenuController implements MouseListener, KeyListener {
 			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionFacturacion.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlInventario.setVisible(true);
 			this.menu.pnlEmpleados.setVisible(false);
 			this.menu.pnlUsuarios.setVisible(false);
 			this.menu.pnlClientesCreditos.setVisible(false);
+			this.menu.pnlFacturacion.setVisible(false);
 		} else if (e.getSource() == this.menu.pnlOpcionClientes) {
 			ClientesController.createInstanceController(menu, clientesModel);
+			CreditosController.createInstanceController(menu, creditosModel);
 			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(0, 102, 255));
 			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionFacturacion.setBackground(new java.awt.Color(0, 102, 204));
 			this.menu.pnlClientesCreditos.setVisible(true);
+			this.menu.pnlInventario.setVisible(false);
+			this.menu.pnlEmpleados.setVisible(false);
+			this.menu.pnlUsuarios.setVisible(false);
+			this.menu.pnlFacturacion.setVisible(false);
+		} else if (e.getSource() == this.menu.pnlOpcionFacturacion) {
+			FacturacionController.createInstanceController(menu, facturacionModel);
+			this.menu.pnlOpcionFacturacion.setBackground(new java.awt.Color(0, 102, 255));
+			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlFacturacion.setVisible(true);
+			this.menu.pnlClientesCreditos.setVisible(false);
 			this.menu.pnlInventario.setVisible(false);
 			this.menu.pnlEmpleados.setVisible(false);
 			this.menu.pnlUsuarios.setVisible(false);

@@ -164,6 +164,17 @@ public class ClientesModel extends Conexion {
 		}
 	}
 
+	//TODO hablar el asunto de avales con lemark si lo hacemos con llave foranea de clientes o asi separado.
+	public void guardarAval(){
+		this.cn = conexion();
+		this.consulta = "";
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			
+		} catch (Exception e) {
+		}
+	}
+
 	public void editar() {
 		this.cn = conexion();
 		this.consulta = "SELECT * FROM clientes WHERE id = ?";
