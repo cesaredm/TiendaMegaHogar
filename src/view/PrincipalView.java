@@ -142,6 +142,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 tblFacturacion = new javax.swing.JTable();
                 jLabel68 = new javax.swing.JLabel();
                 lblTotalFactura = new javax.swing.JLabel();
+                btnBuscarArticuloFacturacion = new javax.swing.JButton();
                 pnlUsuarios = new javax.swing.JPanel();
                 jPanel1 = new javax.swing.JPanel();
                 jLabel19 = new javax.swing.JLabel();
@@ -1118,10 +1119,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 tblFacturacion.setFont(new java.awt.Font("Segoe UI", 0, 15)); // NOI18N
                 tblFacturacion.setModel(new javax.swing.table.DefaultTableModel(
                         new Object [][] {
-                                {null, null, null, null, null, null},
-                                {null, null, null, null, null, null},
-                                {null, null, null, null, null, null},
-                                {null, null, null, null, null, null}
+
                         },
                         new String [] {
                                 "ID", "CODIGO BARRA", "CANTIDAD", "DESCRIPCION", "PRECIO", "IMPORTE"
@@ -1141,6 +1139,10 @@ public class PrincipalView extends javax.swing.JFrame {
                 lblTotalFactura.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 51)));
                 lblTotalFactura.setOpaque(true);
 
+                btnBuscarArticuloFacturacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnBuscarArticuloFacturacion.setText("Buscar Art. [F7]");
+                btnBuscarArticuloFacturacion.setActionCommand("btnBuscarArticuloFacturacion");
+
                 javax.swing.GroupLayout pnlFacturacionLayout = new javax.swing.GroupLayout(pnlFacturacion);
                 pnlFacturacion.setLayout(pnlFacturacionLayout);
                 pnlFacturacionLayout.setHorizontalGroup(
@@ -1148,30 +1150,35 @@ public class PrincipalView extends javax.swing.JFrame {
                         .addGroup(pnlFacturacionLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(pnlFacturacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane13)
                                         .addGroup(pnlFacturacionLayout.createSequentialGroup()
                                                 .addGroup(pnlFacturacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(jLabel67)
+                                                        .addComponent(jScrollPane13)
                                                         .addGroup(pnlFacturacionLayout.createSequentialGroup()
-                                                                .addComponent(txtCodigoBarraFacturacion, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGroup(pnlFacturacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                        .addComponent(jLabel67))
+                                                                .addGap(0, 0, Short.MAX_VALUE))
+                                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFacturacionLayout.createSequentialGroup()
+                                                                .addGap(0, 0, Short.MAX_VALUE)
+                                                                .addComponent(jLabel68)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(btnAgregarProductoFacturacion)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(btnLimpiarFacturacion)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(btnEliminarArticuloFacturacion)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(btnGuardarFacturacion)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(btnGuardarImprimirFacturacion)))
-                                                .addGap(0, 164, Short.MAX_VALUE))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlFacturacionLayout.createSequentialGroup()
-                                                .addGap(0, 0, Short.MAX_VALUE)
-                                                .addComponent(jLabel68)
+                                                                .addComponent(lblTotalFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addContainerGap())
+                                        .addGroup(pnlFacturacionLayout.createSequentialGroup()
+                                                .addComponent(txtCodigoBarraFacturacion, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(lblTotalFactura, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addContainerGap())
+                                                .addComponent(btnAgregarProductoFacturacion)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btnLimpiarFacturacion)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btnEliminarArticuloFacturacion)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btnBuscarArticuloFacturacion)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(btnGuardarFacturacion)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btnGuardarImprimirFacturacion)
+                                                .addGap(50, 50, 50))))
                 );
                 pnlFacturacionLayout.setVerticalGroup(
                         pnlFacturacionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1187,7 +1194,8 @@ public class PrincipalView extends javax.swing.JFrame {
                                         .addComponent(btnLimpiarFacturacion)
                                         .addComponent(btnEliminarArticuloFacturacion)
                                         .addComponent(btnGuardarFacturacion)
-                                        .addComponent(btnGuardarImprimirFacturacion))
+                                        .addComponent(btnGuardarImprimirFacturacion)
+                                        .addComponent(btnBuscarArticuloFacturacion))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1284,9 +1292,9 @@ public class PrincipalView extends javax.swing.JFrame {
                                                                 .addComponent(txtEmpleadoUsuario))
                                                         .addComponent(cmbPermisoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(btnLimpiarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                                                                .addComponent(btnLimpiarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(btnGuardarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                                                                .addComponent(btnGuardarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(btnActualizarUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                                         .addGroup(jPanel1Layout.createSequentialGroup()
@@ -1551,7 +1559,7 @@ public class PrincipalView extends javax.swing.JFrame {
                         .addGroup(jPanel6Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 1076, Short.MAX_VALUE)
+                                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 1085, Short.MAX_VALUE)
                                         .addGroup(jPanel6Layout.createSequentialGroup()
                                                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addGroup(jPanel6Layout.createSequentialGroup()
@@ -1656,7 +1664,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 jPanel7.setLayout(jPanel7Layout);
                 jPanel7Layout.setHorizontalGroup(
                         jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 1088, Short.MAX_VALUE)
+                        .addGap(0, 1097, Short.MAX_VALUE)
                 );
                 jPanel7Layout.setVerticalGroup(
                         jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1746,7 +1754,7 @@ public class PrincipalView extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 1066, Short.MAX_VALUE)
+                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 1075, Short.MAX_VALUE)
                                         .addGroup(jPanel4Layout.createSequentialGroup()
                                                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                                         .addGroup(jPanel4Layout.createSequentialGroup()
@@ -1912,7 +1920,7 @@ public class PrincipalView extends javax.swing.JFrame {
                         .addGroup(jPanel11Layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 1088, Short.MAX_VALUE)
+                                        .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 1097, Short.MAX_VALUE)
                                         .addGroup(jPanel11Layout.createSequentialGroup()
                                                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -2172,7 +2180,7 @@ public class PrincipalView extends javax.swing.JFrame {
                                                 .addComponent(jLabel55)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(txtBuscarCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(0, 235, Short.MAX_VALUE)))
+                                                .addGap(0, 244, Short.MAX_VALUE)))
                                 .addContainerGap())
                 );
                 jPanel14Layout.setVerticalGroup(
@@ -2215,7 +2223,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 jPanel5.setLayout(jPanel5Layout);
                 jPanel5Layout.setHorizontalGroup(
                         jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGap(0, 1100, Short.MAX_VALUE)
+                        .addGap(0, 1109, Short.MAX_VALUE)
                 );
                 jPanel5Layout.setVerticalGroup(
                         jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2302,6 +2310,7 @@ public class PrincipalView extends javax.swing.JFrame {
         public javax.swing.JButton btnAgregarCreditoFacturacion;
         public javax.swing.JButton btnAgregarMarca;
         public javax.swing.JButton btnAgregarProductoFacturacion;
+        public javax.swing.JButton btnBuscarArticuloFacturacion;
         public javax.swing.JButton btnEliminarArticuloFacturacion;
         public javax.swing.JButton btnGuardarCliente;
         public javax.swing.JButton btnGuardarCredito;

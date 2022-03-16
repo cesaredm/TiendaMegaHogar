@@ -14,24 +14,25 @@ import javax.swing.JOptionPane;
  * @author CESAR DIAZ MARADIAGA
  */
 public class Conexion {
-	String db = "tiendamegahogar";
-	String url = "jdbc:mysql://localhost/" + db;
-	String user = "root";
-	String pass = "19199697tsoCD";
+	private static String db = "tiendamegahogar";
+	private static String url = "jdbc:mysql://localhost/" + db;
+	private static String user = "root";
+	private static String pass = "19199697tsoCD";
 	public Conexion(){
 		
 	}
 
-	public Connection conexion() {
+	public static Connection conexion() {
 		Connection link = null;
 		try {
 			//cargamos el Driver a 
 			Class.forName("org.gjt.mm.mysql.Driver");
 
-			link = DriverManager.getConnection(this.url, this.user, this.pass);
+			link = DriverManager.getConnection(url, user, pass);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e);
 		}
 		return link;
 	}
+
 }

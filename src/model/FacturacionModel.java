@@ -6,6 +6,7 @@
 package model;
 
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +29,7 @@ public class FacturacionModel extends Conexion {
 	/* ---------- DETALLES ---------- */
 	private int factura, comprobante, producto;
 	private float precio, cantidad, importe;
-	public ArrayList<String> getProducto;
+	public String[] getProducto;
 
 	public boolean validar;
 	public DefaultTableModel tableModel;
@@ -41,9 +42,10 @@ public class FacturacionModel extends Conexion {
 	private PreparedStatement pst;
 	private Statement st;
 	private ResultSet rs;
+	private DecimalFormat formato;
 
 	public FacturacionModel() {
-		
+		this.formato = new DecimalFormat("##,###,###,##0.00");
 	}
 
 	public Timestamp getFecha() {
@@ -145,51 +147,24 @@ public class FacturacionModel extends Conexion {
 	public void guardarFactura() {
 	}
 
-	public void isVenta() {
-		this.cn = conexion();
-		this.consulta = "CALL vender(?,?)";
-		try {
-			this.pst = this.cn.prepareStatement(this.consulta);
-			this.pst.setInt(1, producto);
-			this.pst.setFloat(2, cantidad);
-			this.rs = this.pst.executeQuery();
-			while (this.rs.next()) {
-				if (this.rs.getString("message").equals("Venta realizada con exito")) {
-					this.validar = true;
-				} else {
-					this.validar = false;
-					JOptionPane.showMessageDialog(null, this.rs.getString("message"));
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				this.cn.close();
-			} catch (SQLException ex) {
-				Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-	}
-
 	public void getProductoVender(String codigo) {
-		this.isVenta();
-		if (this.validar) {
+		if (Procedures.venderCodigoBarra(codigo, 1)) {
 			this.cn = conexion();
 			this.consulta = "SELECT * FROM productos AS p"
 				+ " WHERE p.codigoBarra = ?";
-			this.getProducto = new ArrayList<String>();
+
+			this.getProducto = new String[6];
 			try {
 				this.pst = this.cn.prepareStatement(this.consulta);
 				this.pst.setString(1, codigo);
 				this.rs = this.pst.executeQuery();
 				while (this.rs.next()) {
-					this.getProducto.add(this.rs.getString("id"));	
-					this.getProducto.add(this.rs.getString("codigoBarra"));
-					this.getProducto.add(this.rs.getString("1"));
-					this.getProducto.add(this.rs.getString("descripcion"));
-					this.getProducto.add(this.rs.getString("precioVenta"));
-					this.getProducto.add(this.rs.getString("precioVenta"));
+					this.getProducto[0] = this.rs.getString("id");
+					this.getProducto[1] = this.rs.getString("codigoBarra");
+					this.getProducto[2] = "1";
+					this.getProducto[3] = this.rs.getString("descripcion");
+					this.getProducto[4] = this.rs.getString("precioVenta");
+					this.getProducto[5] = this.rs.getString("precioVenta");
 				}
 			} catch (Exception e) {
 			} finally {
@@ -199,8 +174,42 @@ public class FacturacionModel extends Conexion {
 					Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
 				}
 			}
+		} else {
 		}
 
+	}
+
+	public void getProductoVender(int producto, float cantidad) {
+		if (Procedures.venderId(producto, cantidad)) {
+			this.cn = conexion();
+			this.consulta = "SELECT * FROM productos AS p"
+				+ " WHERE p.id = ?";
+			this.getProducto = new String[6];
+			try {
+				this.pst = this.cn.prepareStatement(this.consulta);
+				this.pst.setInt(1, producto);
+				this.rs = this.pst.executeQuery();
+				while (this.rs.next()) {
+					this.importe = cantidad * this.rs.getFloat("precioVenta");
+					this.getProducto[0] = this.rs.getString("id");
+					this.getProducto[1] = this.rs.getString("codigoBarra");
+					this.getProducto[2] = this.formato.format(cantidad);
+					this.getProducto[3] = this.rs.getString("descripcion");
+					this.getProducto[4] = this.rs.getString("precioVenta");
+					this.getProducto[5] = this.formato.format(this.importe);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					this.importe = 0;
+					this.cn.close();
+				} catch (SQLException ex) {
+					Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+		} else {
+		}
 	}
 
 	public void getProductosVender(String value) {
@@ -231,6 +240,7 @@ public class FacturacionModel extends Conexion {
 				this.tableModel.addRow(datos);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			try {
 				this.cn.close();
