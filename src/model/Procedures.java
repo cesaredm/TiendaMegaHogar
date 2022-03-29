@@ -78,4 +78,22 @@ public class Procedures extends Conexion {
 		}
 		return response;
 	}
+
+	public static void agregarInventario(int producto, float cantidad) {
+		cn = conexion();
+		try {
+			pst = cn.prepareStatement("CALL agregarInventario(?,?)");
+			pst.setInt(1, producto);
+			pst.setFloat(2, cantidad);
+			pst.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(Procedures.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
 }

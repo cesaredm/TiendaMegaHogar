@@ -60,11 +60,11 @@ public class MenuController implements MouseListener, KeyListener {
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource() == this.menu.pnlOpcionUsuario) {
 			UsuariosController.createInstanceController(this.menu, this.usuarioModel);
-			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(0, 102, 255));
-			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionFacturacion.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(28,31,37));
+			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(32,36,42));
+			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(32,36,42));
+			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(32,36,42));
+			this.menu.pnlOpcionFacturacion.setBackground(new java.awt.Color(32,36,42));
 			this.menu.pnlUsuarios.setVisible(true);
 			this.menu.pnlEmpleados.setVisible(false);
 			this.menu.pnlInventario.setVisible(false);
@@ -72,11 +72,11 @@ public class MenuController implements MouseListener, KeyListener {
 			this.menu.pnlFacturacion.setVisible(false);
 		} else if (e.getSource() == this.menu.pnlOpcionEmpleados) {
 			EmpleadosController.createInstanceController(menu, empleadosModel);
-			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(0, 102, 255));
-			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionFacturacion.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(28,31,37));
+			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(32,36,42));
+			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(32,36,42));
+			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(32,36,42));
+			this.menu.pnlOpcionFacturacion.setBackground(new java.awt.Color(32,36,42));
 			this.menu.pnlEmpleados.setVisible(true);
 			this.menu.pnlUsuarios.setVisible(false);
 			this.menu.pnlInventario.setVisible(false);
@@ -85,11 +85,11 @@ public class MenuController implements MouseListener, KeyListener {
 		} else if (e.getSource() == this.menu.pnlOpcionInventario) {
 			ProductosController.createInstanceController(menu, productosModel, kardex);
 			MarcasController.createInstanceController(menu, marcasModel);
-			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0, 102, 255));
-			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionFacturacion.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(28,31,37));
+			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(32,36,42));
+			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(32,36,42));
+			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(32,36,42));
+			this.menu.pnlOpcionFacturacion.setBackground(new java.awt.Color(32,36,42));
 			this.menu.pnlInventario.setVisible(true);
 			this.menu.pnlEmpleados.setVisible(false);
 			this.menu.pnlUsuarios.setVisible(false);
@@ -98,11 +98,11 @@ public class MenuController implements MouseListener, KeyListener {
 		} else if (e.getSource() == this.menu.pnlOpcionClientes) {
 			ClientesController.createInstanceController(menu, clientesModel);
 			CreditosController.createInstanceController(menu, creditosModel);
-			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(0, 102, 255));
-			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionFacturacion.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(28,31,37));
+			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(32,36,42));
+			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(32,36,42));
+			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(32,36,42));
+			this.menu.pnlOpcionFacturacion.setBackground(new java.awt.Color(32,36,42));
 			this.menu.pnlClientesCreditos.setVisible(true);
 			this.menu.pnlInventario.setVisible(false);
 			this.menu.pnlEmpleados.setVisible(false);
@@ -110,11 +110,11 @@ public class MenuController implements MouseListener, KeyListener {
 			this.menu.pnlFacturacion.setVisible(false);
 		} else if (e.getSource() == this.menu.pnlOpcionFacturacion) {
 			FacturacionController.createInstanceController(menu, facturacionModel);
-			this.menu.pnlOpcionFacturacion.setBackground(new java.awt.Color(0, 102, 255));
-			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(0, 102, 204));
-			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(0, 102, 204));
+			this.menu.pnlOpcionFacturacion.setBackground(new java.awt.Color(28,31,37));
+			this.menu.pnlOpcionClientes.setBackground(new java.awt.Color(32,36,42));
+			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(32,36,42));
+			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(32,36,42));
+			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(32,36,42));
 			this.menu.pnlFacturacion.setVisible(true);
 			this.menu.pnlClientesCreditos.setVisible(false);
 			this.menu.pnlInventario.setVisible(false);

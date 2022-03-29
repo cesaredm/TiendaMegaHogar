@@ -248,6 +248,41 @@ public class FacturacionModel extends Conexion {
 				Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
+	}
 
+	public void mostrarCreditos(String value) {
+		this.cn = conexion();
+		this.consulta = "SELECT cr.id, c.nombres,c.apellidos FROM creditos AS cr INNER JOIN clientes AS c ON(cr.cliente=c.id)"
+			+ " WHERE CONCAT(c.nombres,c.apellidos,cr.id) LIKE ? ORDER BY id DESC LIMIT 30";
+		String[] titulos = {"ID CREDITO", "CLIENTE"};
+		this.datos = new String[2];
+		this.tableModel = new DefaultTableModel(null, titulos) {
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				return false;
+			}
+		};
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setString(1, "%" + value + "%");
+			this.rs = this.pst.executeQuery();
+			while (this.rs.next()) {
+				this.datos[0] = this.rs.getString("id");
+				this.datos[1] = this.rs.getString("nombres") + " " + this.rs.getString("apellidos");
+				this.tableModel.addRow(datos);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+
+	public void agregarInventario(int producto, float cantidad) {
+		Procedures.agregarInventario(producto, cantidad);
 	}
 }

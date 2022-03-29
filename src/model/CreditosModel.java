@@ -19,7 +19,7 @@ public class CreditosModel extends Conexion {
 
 	private Timestamp fecha;
 	private int cliente, aval, id, banderin;
-	private String estado, consulta;
+	private String estado, consulta, nombreCliente,nombreAval;
 	public boolean validar;
 	private String[] datos;
 
@@ -73,6 +73,22 @@ public class CreditosModel extends Conexion {
 		this.estado = estado;
 	}
 
+	public String getNombreCliente() {
+		return nombreCliente;
+	}
+
+	public void setNombreCliente(String nombreCliente) {
+		this.nombreCliente = nombreCliente;
+	}
+
+	public String getNombreAval() {
+		return nombreAval;
+	}
+
+	public void setNombreAval(String nombreAval) {
+		this.nombreAval = nombreAval;
+	}
+
 	public void validar() {
 		if (fecha.equals("")) {
 			this.validar = false;
@@ -111,9 +127,32 @@ public class CreditosModel extends Conexion {
 		}
 	}
 
+	public void nombreAval(){
+		this.cn = conexion();
+		this.consulta = "SELECT cl.nombres,cl.apellidos FROM avales AS a INNER JOIN clientes AS cl ON(cl.id = a.cliente) INNER JOIN "
+			+ "creditos AS cr ON(cr.aval = a.id) WHERE cr.id = ?";
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setInt(1, this.id);
+			this.rs = this.pst.executeQuery();
+			while (this.rs.next()) {
+				this.nombreAval = this.rs.getString("nombres") + " " + this.rs.getString("apellidos");
+			}
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Oops.. error al intentar editar cuenta. -> " + e);
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(CreditosModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+	
 	public void editar() {
 		this.cn = conexion();
-		this.consulta = "SELECT * FROM creditos WHERE id = ?";
+		this.consulta = "SELECT c.*,cl.nombres,apellidos FROM creditos AS c INNER JOIN clientes AS cl ON(c.cliente=cl.id) WHERE c.id = ?";
 		try {
 			this.pst = this.cn.prepareStatement(this.consulta);
 			this.pst.setInt(1, this.id);
@@ -123,6 +162,7 @@ public class CreditosModel extends Conexion {
 				this.cliente = this.rs.getInt("cliente");
 				this.aval = this.rs.getInt("aval");
 				this.estado = this.rs.getString("estado");
+				this.nombreCliente = this.rs.getString("nombres") + " " + this.rs.getString("apellidos");
 			}
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, "Oops.. error al intentar editar cuenta. -> " + e);
@@ -250,8 +290,9 @@ public class CreditosModel extends Conexion {
 
 	public void getAvales(String value) {
 		this.cn = conexion();
-		this.consulta = "SELECT id,nombres,apellidos,dni FROM avales WHERE nombres LIKE ? LIMIT 20";
-		String[] titulos = {"ID", "NOMBRE COMPLETO", "DNI"};
+		this.consulta = "SELECT a.id,c.nombres,apellidos,dni FROM avales AS a INNER JOIN clientes AS c ON(a.cliente=c.id) WHERE "
+			+ "CONCAT(c.id,c.nombres,c.apellidos) LIKE ? LIMIT 20";
+		String[] titulos = {"ID AVAL", "NOMBRE COMPLETO", "DNI"};
 		this.datos = new String[3];
 		this.tableModel = new DefaultTableModel(null, titulos) {
 			@Override

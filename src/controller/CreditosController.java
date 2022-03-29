@@ -62,6 +62,8 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 			this.menu.jsAvalCredito.setValue(0);
 			this.menu.jsClienteCredito.setValue(0);
 			this.menu.cmbEstadoCredito.setSelectedIndex(1);
+			this.menu.txtClienteCredito.setText("");
+			this.menu.txtAvalCredito.setText("");
 			this.menu.btnGuardarCredito.setEnabled(true);
 			this.menu.btnActualizarCredito.setEnabled(false);
 		}
@@ -80,8 +82,9 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 	public void editar() {
 		this.filaseleccionada = this.menu.tblCreditos.getSelectedRow();
 		if (this.filaseleccionada != -1) {
-			this.creditosModel.setId((int) this.menu.tblCreditos.getValueAt(filaseleccionada, 0));
+			this.creditosModel.setId(Integer.parseInt(this.menu.tblCreditos.getValueAt(filaseleccionada, 0).toString()));
 			this.creditosModel.editar();
+			this.creditosModel.nombreAval();
 			if (this.creditosModel.getEstado().equals("Pendiente")) {
 				this.menu.cmbEstadoCredito.setEnabled(false);
 			}
@@ -89,6 +92,8 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 			this.menu.jsClienteCredito.setValue(this.creditosModel.getCliente());
 			this.menu.jsAvalCredito.setValue(this.creditosModel.getAval());
 			this.menu.cmbEstadoCredito.setSelectedItem(this.creditosModel.getEstado());
+			this.menu.txtClienteCredito.setText(this.creditosModel.getNombreCliente());
+			this.menu.txtAvalCredito.setText(this.creditosModel.getNombreAval());
 			this.menu.btnGuardarCredito.setEnabled(false);
 			this.menu.btnActualizarCredito.setEnabled(true);
 		}
