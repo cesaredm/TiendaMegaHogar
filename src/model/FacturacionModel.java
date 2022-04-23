@@ -145,13 +145,97 @@ public class FacturacionModel extends Conexion {
 	}
 
 	public void guardarFactura() {
+		this.cn = conexion();
+		this.consulta = "INSERT INTO facturas(fecha,tipoVenta,empleado,credito,total,comprador) VALUES(?,?,?,?,?,?)";
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setTimestamp(1, this.fecha);
+			this.pst.setInt(2, this.tipoVenta);
+			this.pst.setInt(3, this.empleado);
+			if (this.credito == 0) {
+				this.pst.setNull(4, java.sql.Types.INTEGER);
+			} else {
+				this.pst.setInt(4, this.credito);
+			}
+			this.pst.setFloat(5, this.total);
+			this.pst.setString(6, this.comprador);
+			this.banderin = this.pst.executeUpdate();
+			if (this.banderin > 0) {
+				this.validar = true;
+			} else {
+				this.validar = false;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+
+	public void guardarComprobante() {
+		this.cn = conexion();
+		this.consulta = "INSERT INTO comprobante(fecha,empleado,comprador,total) VALUES(?,?,?,?)";
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setTimestamp(1, this.fecha);
+			this.pst.setInt(2, this.empleado);
+			this.pst.setString(3, this.comprador);
+			this.pst.setFloat(4, this.total);
+			this.banderin = this.pst.executeUpdate();
+			if(this.banderin > 0)
+			{
+				this.validar = true;
+			}else{
+				this.validar = false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+
+	public void guardarDetalle(boolean bandera) {
+		this.cn = conexion();
+		this.consulta = "INSERT INTO detalles(factura,comprobante,producto,precio,cantidad,importe) VALUES(?,?,?,?,?,?)";
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			if (this.factura > 0) {
+				this.pst.setInt(1, this.factura);
+				this.pst.setNull(2, java.sql.Types.INTEGER);
+			} else {
+				this.pst.setNull(1, java.sql.Types.INTEGER);
+				this.pst.setInt(2, this.comprobante);
+			}
+			this.pst.setInt(3, this.producto);
+			this.pst.setFloat(4, this.precio);
+			this.pst.setFloat(5, this.cantidad);
+			this.pst.setFloat(6, this.importe);
+			this.pst.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
 	}
 
 	public void getProductoVender(String codigo) {
 		if (Procedures.venderCodigoBarra(codigo, 1)) {
 			this.cn = conexion();
 			this.consulta = "SELECT * FROM productos AS p"
-				+ " WHERE p.codigoBarra = ?";
+			     + " WHERE p.codigoBarra = ?";
 
 			this.getProducto = new String[6];
 			try {
@@ -183,7 +267,7 @@ public class FacturacionModel extends Conexion {
 		if (Procedures.venderId(producto, cantidad)) {
 			this.cn = conexion();
 			this.consulta = "SELECT * FROM productos AS p"
-				+ " WHERE p.id = ?";
+			     + " WHERE p.id = ?";
 			this.getProducto = new String[6];
 			try {
 				this.pst = this.cn.prepareStatement(this.consulta);
@@ -215,7 +299,7 @@ public class FacturacionModel extends Conexion {
 	public void getProductosVender(String value) {
 		this.cn = conexion();
 		this.consulta = "SELECT p.id,descripcion,precioVenta,stock,m.nombre FROM productos AS p INNER JOIN marca AS m ON(p.marca=m.id)"
-			+ " WHERE CONCAT(p.descripcion,p.codigoBarra,m.nombre) LIKE ? LIMIT 30";
+		     + " WHERE CONCAT(p.descripcion,p.codigoBarra,m.nombre) LIKE ? LIMIT 30";
 		String[] titulos = {"ID", "DESCRIPCION", "MARCA", "PRECIO VENTA", "INVENTARIO"};
 		this.datos = new String[5];
 		this.tableModel = new DefaultTableModel(null, titulos) {
@@ -253,7 +337,7 @@ public class FacturacionModel extends Conexion {
 	public void mostrarCreditos(String value) {
 		this.cn = conexion();
 		this.consulta = "SELECT cr.id, c.nombres,c.apellidos FROM creditos AS cr INNER JOIN clientes AS c ON(cr.cliente=c.id)"
-			+ " WHERE CONCAT(c.nombres,c.apellidos,cr.id) LIKE ? ORDER BY id DESC LIMIT 30";
+		     + " WHERE CONCAT(c.nombres,c.apellidos,cr.id) LIKE ? ORDER BY id DESC LIMIT 30";
 		String[] titulos = {"ID CREDITO", "CLIENTE"};
 		this.datos = new String[2];
 		this.tableModel = new DefaultTableModel(null, titulos) {
@@ -284,5 +368,70 @@ public class FacturacionModel extends Conexion {
 
 	public void agregarInventario(int producto, float cantidad) {
 		Procedures.agregarInventario(producto, cantidad);
+	}
+
+	public void getTiposVenta() {
+		this.cn = conexion();
+		this.consulta = "SELECT * FROM tipoVenta";
+		this.comboModel = new DefaultComboBoxModel();
+		try {
+			this.st = this.cn.createStatement();
+			this.rs = this.st.executeQuery(this.consulta);
+			while (this.rs.next()) {
+				this.comboModel.addElement(new CmbTipoVenta(this.rs.getInt("id"), this.rs.getString("tipoVenta")));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+
+	public int updateNumberFactura() {
+		int number = 0;
+		this.cn = conexion();
+		this.consulta = "SELECT MAX(id) AS number FROM facturas";
+		try {
+			this.st = this.cn.createStatement();
+			this.rs = this.st.executeQuery(this.consulta);
+			while (this.rs.next()) {
+				number = this.rs.getInt("number") + 1;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		return number;
+	}
+
+	public int updateNumberComprobante() {
+		int number = 0;
+		this.cn = conexion();
+		this.consulta = "SELECT MAX(id) AS number FROM comprobante";
+		try {
+			this.st = this.cn.createStatement();
+			this.rs = this.st.executeQuery(this.consulta);
+			while (this.rs.next()) {
+				number = this.rs.getInt("number") + 1;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		return number;
 	}
 }

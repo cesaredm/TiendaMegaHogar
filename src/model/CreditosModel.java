@@ -213,7 +213,7 @@ public class CreditosModel extends Conexion {
 			this.pst.setInt(1, this.id);
 			this.rs = this.pst.executeQuery();
 			while (this.rs.next()) {
-				if (this.rs.getString("estado").equals("abierto")) {
+				if (this.rs.getString("estado").equals("Abierto")) {
 					this.eliminar();
 				} else {
 					JOptionPane.showMessageDialog(
@@ -323,7 +323,8 @@ public class CreditosModel extends Conexion {
 
 	public void getClientes(String value) {
 		this.cn = conexion();
-		this.consulta = "SELECT id,nombres,apellidos,dni FROM clientes WHERE nombres LIKE ? LIMIT 20";
+		this.consulta = "SELECT cl.id,nombres,apellidos,dni FROM clientes AS cl LEFT OUTER JOIN creditos as c ON(cl.id=c.cliente)"
+		     + " WHERE cl.nombres LIKE ? AND c.cliente IS NULL ORDER BY cl.id DESC LIMIT 20";
 		String[] titulos = {"ID", "NOMBRE COMPLETO", "DNI"};
 		this.datos = new String[3];
 		this.tableModel = new DefaultTableModel(null, titulos) {

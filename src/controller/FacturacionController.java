@@ -2,6 +2,8 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -18,17 +20,19 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.table.DefaultTableModel;
+import model.CmbTipoVenta;
 import model.Procedures;
 
 /**
  *
  * @author CESAR DIAZ MARADIAGA
  */
-public class FacturacionController implements KeyListener, CaretListener, MouseListener, ActionListener, WindowListener {
+public class FacturacionController implements KeyListener, CaretListener, MouseListener, ActionListener, WindowListener, ItemListener {
 
 	private static FacturacionController instancia = null;
 	PrincipalView menu;
 	FacturacionModel facturacionModel;
+	CmbTipoVenta tiposVenta;
 	DefaultTableModel modelo;
 	String codigoBarra;
 	DecimalFormat formato;
@@ -37,12 +41,17 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 	SpinnerNumberModel spinnerModel;
 	JSpinner spinner;
 
+	//variables de detalles
+	float importe, precio;
+
 	private FacturacionController(PrincipalView menu, FacturacionModel facturacionModel) {
 		this.menu = menu;
 		this.facturacionModel = facturacionModel;
+		this.updateNumberComprobante();
 		this.formato = new DecimalFormat("##,###,###,##0.00");
 		start();
 		this.createJSpinner();
+		this.showTiposVentas();
 		this.modelo = (DefaultTableModel) this.menu.tblFacturacion.getModel();
 		this.menu.btnLimpiarFacturacion.addActionListener(this);
 		this.menu.btnAgregarProductoFacturacion.addActionListener(this);
@@ -59,6 +68,7 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 		this.menu.txtBuscarCreditoFacturacion.addCaretListener(this);
 		this.menu.tblProductosFacturacion.addMouseListener(this);
 		this.menu.tblCreditosFacturacion.addMouseListener(this);
+		this.menu.cmbTipoComprobante.addItemListener(this);
 		this.menu.addWindowListener(this);
 	}
 
@@ -73,6 +83,11 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 		if (instancia == null) {
 			instancia = new FacturacionController(menu, facturacionModel);
 		}
+	}
+
+	public void showTiposVentas() {
+		this.facturacionModel.getTiposVenta();
+		this.menu.cmbFormaPagoFacturacion.setModel(this.facturacionModel.comboModel);
 	}
 
 	public void start() {
@@ -101,7 +116,90 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 		return myString.toString();
 	}
 
-	public void guardar() {
+	public void setDatosSave() {
+		int credito;
+		credito = (this.menu.lblIdCreditoFacturacion.getText().equals("")) ? 0 : Integer.parseInt(this.menu.lblIdCreditoFacturacion.getText());
+		this.tiposVenta = (CmbTipoVenta) this.menu.cmbFormaPagoFacturacion.getSelectedItem();
+		this.menu.jcFechaFactura.setDate(new Date());
+		this.facturacionModel.setFecha(
+		     new java.sql.Timestamp(this.menu.jcFechaFactura.getDate().getTime())
+		);
+		this.facturacionModel.setTipoVenta(this.tiposVenta.getId());
+		this.facturacionModel.setEmpleado(MenuController.empleadoSistema);
+		this.facturacionModel.setCredito(credito);
+		this.facturacionModel.setTotal(Float.parseFloat(this.CleanChars(this.menu.lblTotalFactura.getText())));
+		this.facturacionModel.setComprador(this.menu.txtCompradorFacturacion.getText());
+	}
+
+	public void guardarFactura() {
+		this.setDatosSave();
+		this.facturacionModel.guardarFactura();
+		if (this.facturacionModel.validar) {
+			this.guardarDetalle(true);
+		}
+	}
+
+	public void guardarComprobante() {
+		this.setDatosSave();
+		this.facturacionModel.guardarComprobante();
+		if (this.facturacionModel.validar) {
+			this.guardarDetalle(false);
+		}
+	}
+
+	public void s() {
+		if (this.menu.btnGuardarFacturacion.isEnabled()) {
+			if (this.menu.cmbTipoComprobante.getSelectedItem().toString().equals("Factura")) {
+				this.guardarFactura();
+			} else {
+				this.guardarComprobante();
+			}
+		}else{
+			JOptionPane.showMessageDialog(null, "La factura esta vacia.");
+		}
+	}
+
+	public void updateNumberFactura() {
+		this.menu.txtNumeroFactura.setText(
+		     "" + this.facturacionModel.updateNumberFactura()
+		);
+	}
+
+	public void updateNumberComprobante() {
+		this.menu.txtNumeroFactura.setText(
+		     "" + this.facturacionModel.updateNumberComprobante()
+		);
+	}
+
+	public void guardarDetalle(boolean bandera) {
+		/* si la bandera es true guardara los detalles a una factura de lo contrario los guardara a un comprovante*/
+		try {
+			this.filas = this.menu.tblFacturacion.getRowCount();
+			if (this.filas > 0) {
+				for (int i = 0; i < this.filas; i++) {
+					this.producto = Integer.parseInt(this.menu.tblFacturacion.getValueAt(i, 0).toString());
+					this.precio = Float.parseFloat(this.CleanChars(this.menu.tblFacturacion.getValueAt(i, 4).toString()));
+					this.cantidad = Float.parseFloat(this.menu.tblFacturacion.getValueAt(i, 2).toString());
+					this.importe = Float.parseFloat(this.CleanChars(this.menu.tblFacturacion.getValueAt(i, 5).toString()));
+					if (bandera) {
+						this.facturacionModel.setFactura(Integer.parseInt(this.menu.txtNumeroFactura.getText()));
+						this.facturacionModel.setComprobante(0);
+					} else {
+						this.facturacionModel.setFactura(0);
+						this.facturacionModel.setComprobante(Integer.parseInt(this.menu.txtNumeroFactura.getText()));
+					}
+					this.facturacionModel.setProducto(producto);
+					this.facturacionModel.setPrecio(precio);
+					this.facturacionModel.setCantidad(cantidad);
+					this.facturacionModel.setImporte(importe);
+					this.facturacionModel.guardarDetalle(bandera);
+				}
+				this.updateNumberComprobante();
+				this.limpiar();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -121,20 +219,18 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 						importe = cantidad * precio;
 						this.menu.tblFacturacion.setValueAt(this.formato.format(importe), i, 5);
 						this.menu.tblFacturacion.setValueAt(this.formato.format(cantidad), i, 2);
-						this.mostrarProductosVender("");
 						this.menu.txtBuscarProductoFacturacion.requestFocus();
 					} else {
 						this.modelo.addRow(this.facturacionModel.getProducto);
-						this.mostrarProductosVender("");
 						this.menu.txtBuscarProductoFacturacion.requestFocus();
 					}
 				}
 			} else {
 				this.modelo.addRow(this.facturacionModel.getProducto);
-				this.mostrarProductosVender("");
 				this.menu.txtBuscarProductoFacturacion.requestFocus();
 			}
-			sumarImportes();
+			this.sumarImportes();
+			this.mostrarProductosVender("");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -169,15 +265,19 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 				int confir = JOptionPane.showConfirmDialog(null, this.spinner, "Cantidad:", JOptionPane.YES_OPTION);
 				this.spinner.requestFocus();
 				if (confir == JOptionPane.YES_OPTION) {
-					this.producto = Integer.parseInt(
-						this.menu.tblProductosFacturacion.getValueAt(this.filaseleccionada, 0).toString()
-					);
 					this.cantidad = Float.parseFloat(this.spinner.getValue().toString());
-					this.facturacionModel.getProductoVender(this.producto, cantidad);
-					if (Procedures.response) {
-						this.add(this.producto, this.cantidad);
+					if (this.cantidad > 0) {
+						this.producto = Integer.parseInt(
+						     this.menu.tblProductosFacturacion.getValueAt(this.filaseleccionada, 0).toString()
+						);
+						this.facturacionModel.getProductoVender(this.producto, cantidad);
+						if (Procedures.response) {
+							this.add(this.producto, this.cantidad);
+						}
 					}
+
 				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -213,6 +313,7 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 					this.cantidad = Float.parseFloat(this.modelo.getValueAt(i, 2).toString());
 					this.facturacionModel.agregarInventario(producto, cantidad);
 				}
+				this.mostrarProductosVender("");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -230,8 +331,10 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 			this.menu.lblTotalFactura.setText("0.00");
 			this.menu.txtClienteFacturacion.setText("");
 			this.menu.txtCompradorFacturacion.setText("");
+			this.menu.txtCodigoBarraFacturacion.setText("");
 			this.menu.cmbFormaPagoFacturacion.setSelectedItem("");
-			this.menu.cmbTipoComprobante.setSelectedIndex(1);
+			this.menu.cmbTipoComprobante.setSelectedItem("Comprobante");
+			this.menu.cmbFormaPagoFacturacion.setSelectedItem(new CmbTipoVenta(1, ""));
 			this.menu.btnGuardarFacturacion.setEnabled(false);
 			this.menu.btnGuardarImprimirFacturacion.setEnabled(false);
 		} catch (Exception e) {
@@ -249,6 +352,7 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 			this.modelo = (DefaultTableModel) this.menu.tblFacturacion.getModel();
 			this.modelo.removeRow(this.filaseleccionada);
 			sumarImportes();
+			this.mostrarProductosVender("");
 		}
 	}
 
@@ -262,15 +366,28 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 		this.filaseleccionada = this.menu.tblCreditosFacturacion.getSelectedRow();
 		if (this.filaseleccionada != -1) {
 			this.menu.lblIdCreditoFacturacion.setText(
-				this.menu.tblCreditosFacturacion.getValueAt(this.filaseleccionada, 0).toString()
+			     this.menu.tblCreditosFacturacion.getValueAt(this.filaseleccionada, 0).toString()
 			);
 			this.menu.txtClienteFacturacion.setText(
-				this.menu.tblCreditosFacturacion.getValueAt(this.filaseleccionada, 1).toString()
+			     this.menu.tblCreditosFacturacion.getValueAt(this.filaseleccionada, 1).toString()
 			);
 			this.menu.jdCreditoFacturacion.setVisible(false);
 		}
 	}
 
+	public void habilitarBtnGuardar() {
+		this.filas = this.menu.tblFacturacion.getRowCount();
+		if (this.filas > 0) {
+			this.menu.btnGuardarFacturacion.setEnabled(true);
+			this.menu.btnGuardarImprimirFacturacion.setEnabled(true);
+		} else {
+			this.menu.btnGuardarFacturacion.setEnabled(false);
+			this.menu.btnGuardarImprimirFacturacion.setEnabled(false);
+		}
+	}
+
+
+	/*--------------------------------- EVENTOS ------------------------------- */
 	@Override
 	public void keyTyped(KeyEvent e) {
 	}
@@ -279,12 +396,18 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 	public void keyPressed(KeyEvent e) {
 		if (e.getSource() == this.menu.txtCodigoBarraFacturacion && e.getKeyCode() == e.VK_ENTER) {
 			this.agregarConCodigoBarra();
+			this.habilitarBtnGuardar();
 		} else if (e.getSource() == this.menu.txtCodigoBarraFacturacion && e.getKeyCode() == e.VK_F7) {
 			this.windowProducts();
 		} else if (e.getSource() == this.menu.tblProductosFacturacion && e.getKeyCode() == e.VK_ENTER) {
 			this.agregarDesdeVentana();
+			this.habilitarBtnGuardar();
 		} else if (e.getSource() == this.menu.tblCreditosFacturacion && e.getKeyCode() == e.VK_ENTER) {
 			this.addCredito();
+		} else if (e.getSource() == this.menu.txtCodigoBarraFacturacion && e.getKeyCode() == e.VK_F8) {
+			this.s();
+		} else if (e.getSource() == this.menu.tblFacturacion && e.getKeyCode() == e.VK_F8) {
+			this.s();
 		}
 	}
 
@@ -306,6 +429,7 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 		if (e.getSource() == this.menu.tblProductosFacturacion) {
 			if (e.getClickCount() == 1) {
 				this.agregarDesdeVentana();
+				this.habilitarBtnGuardar();
 			}
 		} else if (e.getSource() == this.menu.tblCreditosFacturacion) {
 			if (e.getClickCount() == 1) {
@@ -334,7 +458,7 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 	public void actionPerformed(ActionEvent e) {
 		switch (e.getActionCommand()) {
 			case "btnGuardarFacturacion": {
-
+				this.s();
 			}
 			break;
 			case "btnGuardarImprimirFacturacion": {
@@ -342,24 +466,27 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 			}
 			break;
 			case "btnLimpiarFacturacion": {
-				devolverAinventario();
-				limpiar();
+				this.devolverAinventario();
+				this.limpiar();
+				this.habilitarBtnGuardar();
 			}
 			break;
 			case "btnAgregarProductoFacturacion": {
-				agregarConCodigoBarra();
+				this.agregarConCodigoBarra();
+				this.habilitarBtnGuardar();
 			}
 			break;
 			case "btnBuscarArticuloFacturacion": {
-				windowProducts();
+				this.windowProducts();
 			}
 			break;
 			case "btnEliminarArticuloFacturacion": {
-				eliminarArticulo();
+				this.eliminarArticulo();
+				this.habilitarBtnGuardar();
 			}
 			break;
 			case "btnAgregarCreditoFacturacion": {
-				windowCreditos();
+				this.windowCreditos();
 			}
 			break;
 		}
@@ -392,6 +519,18 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {
+	}
+
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		if (e.getSource() == this.menu.cmbTipoComprobante && e.getStateChange() == ItemEvent.SELECTED) {
+			Object item = e.getItem();
+			if (item.toString().equals("Factura")) {
+				this.updateNumberFactura();
+			} else if (item.toString().equals("Comprobante")) {
+				this.updateNumberComprobante();
+			}
+		}
 	}
 
 }

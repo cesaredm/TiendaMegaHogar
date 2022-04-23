@@ -120,7 +120,7 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 	public void eliminar() {
 		this.filaseleccionada = this.menu.tblCreditos.getSelectedRow();
 		if (this.filaseleccionada != -1) {
-			this.creditosModel.setId((int) this.menu.tblCreditos.getValueAt(filaseleccionada, 0));
+			this.creditosModel.setId(Integer.parseInt(this.menu.tblCreditos.getValueAt(filaseleccionada, 0).toString()));
 			this.creditosModel.isPendiente();
 			this.mostrar("");
 		}

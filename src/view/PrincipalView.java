@@ -1166,7 +1166,15 @@ public class PrincipalView extends javax.swing.JFrame {
                         new String [] {
                                 "ID", "CODIGO BARRA", "CANTIDAD", "DESCRIPCION", "PRECIO", "IMPORTE"
                         }
-                ));
+                ) {
+                        boolean[] canEdit = new boolean [] {
+                                false, false, false, false, false, false
+                        };
+
+                        public boolean isCellEditable(int rowIndex, int columnIndex) {
+                                return canEdit [columnIndex];
+                        }
+                });
                 tblFacturacion.setRowHeight(26);
                 jScrollPane13.setViewportView(tblFacturacion);
 
@@ -1216,8 +1224,8 @@ public class PrincipalView extends javax.swing.JFrame {
                                                 .addComponent(btnEliminarArticuloFacturacion)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(btnBuscarArticuloFacturacion)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(btnGuardarFacturacion)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btnGuardarFacturacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(btnGuardarImprimirFacturacion)
                                                 .addGap(50, 50, 50))))
