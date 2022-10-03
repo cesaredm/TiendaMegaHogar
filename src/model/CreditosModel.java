@@ -19,7 +19,8 @@ public class CreditosModel extends Conexion {
 
 	private Timestamp fecha;
 	private int cliente, aval, id, banderin;
-	private String estado, consulta, nombreCliente,nombreAval;
+	private float pagos, credito, saldo;
+	private String estado, consulta, nombreCliente, nombreAval;
 	public boolean validar;
 	private String[] datos;
 
@@ -89,6 +90,18 @@ public class CreditosModel extends Conexion {
 		this.nombreAval = nombreAval;
 	}
 
+	public float getPagos() {
+		return pagos;
+	}
+
+	public float getCredito() {
+		return credito;
+	}
+
+	public float getSaldo() {
+		return saldo;
+	}
+
 	public void validar() {
 		if (fecha.equals("")) {
 			this.validar = false;
@@ -127,7 +140,7 @@ public class CreditosModel extends Conexion {
 		}
 	}
 
-	public void nombreAval(){
+	public void nombreAval() {
 		this.cn = conexion();
 		this.consulta = "SELECT cl.nombres,cl.apellidos FROM avales AS a INNER JOIN clientes AS cl ON(cl.id = a.cliente) INNER JOIN "
 			+ "creditos AS cr ON(cr.aval = a.id) WHERE cr.id = ?";
@@ -149,7 +162,7 @@ public class CreditosModel extends Conexion {
 			}
 		}
 	}
-	
+
 	public void editar() {
 		this.cn = conexion();
 		this.consulta = "SELECT c.*,cl.nombres,apellidos FROM creditos AS c INNER JOIN clientes AS cl ON(c.cliente=cl.id) WHERE c.id = ?";
@@ -324,7 +337,7 @@ public class CreditosModel extends Conexion {
 	public void getClientes(String value) {
 		this.cn = conexion();
 		this.consulta = "SELECT cl.id,nombres,apellidos,dni FROM clientes AS cl LEFT OUTER JOIN creditos as c ON(cl.id=c.cliente)"
-		     + " WHERE cl.nombres LIKE ? AND c.cliente IS NULL ORDER BY cl.id DESC LIMIT 20";
+			+ " WHERE cl.nombres LIKE ? AND c.cliente IS NULL ORDER BY cl.id DESC LIMIT 20";
 		String[] titulos = {"ID", "NOMBRE COMPLETO", "DNI"};
 		this.datos = new String[3];
 		this.tableModel = new DefaultTableModel(null, titulos) {
@@ -354,7 +367,57 @@ public class CreditosModel extends Conexion {
 		}
 	}
 
-	public void creditosPendientes() {
+	public void datosCredito(int id) {
+		this.cn = conexion();
+		this.consulta = "CALL credito(?)";
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setInt(1, id);
+			this.rs = this.pst.executeQuery();
+			while (this.rs.next()) {
+				this.pagos = this.rs.getFloat("pagos");
+				this.credito = this.rs.getFloat("credito");
+				this.saldo = this.credito - this.pagos; 
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+		}
 
+	}
+
+	public void creditosPendientes(String value) {
+		this.cn = conexion();
+		int id=0;
+		this.consulta = "SELECT c.id,cl.nombres,apellidos FROM clientes AS cl INNER JOIN creditos AS c ON(cl.id=c.cliente) WHERE CONCAT(c.id,cl.nombres) LIKE ? AND c.estado = 'Pendiente'";
+		String[] titulos = {"N. CREDITO", "CLIENTE", "SALDO"};
+		this.datos = new String[3];
+		this.tableModel = new DefaultTableModel(null, titulos) {
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				return false;
+			}
+		};
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setString(1, "%" + value + "%");
+			ResultSet rs = this.pst.executeQuery();
+			while (rs.next()) {
+				id = rs.getInt("id");
+				this.datosCredito(id);
+				this.datos[0] = String.valueOf(id);
+				this.datos[1] = rs.getString("nombres") + " " + rs.getString("apellidos");
+				this.datos[2] = String.valueOf(this.saldo);
+				this.tableModel.addRow(this.datos);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(CreditosModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
 	}
 }

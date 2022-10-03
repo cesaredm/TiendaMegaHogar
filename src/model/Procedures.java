@@ -96,4 +96,36 @@ public class Procedures extends Conexion {
 			}
 		}
 	}
+
+	public static void cambiarEstadoCredito(int credito) {
+		cn = conexion();
+		String consulta = "";
+		float deuda = 0, pagos = 0, saldo = 0;
+		try {
+			pst = cn.prepareStatement("CALL credito(?)");
+			pst.setInt(1, credito);
+			rs = pst.executeQuery();
+			while (rs.next()) {
+				deuda = rs.getFloat("credito");
+				pagos = rs.getFloat("pagos");
+			}
+			saldo = deuda - pagos;
+			if (saldo == 0) {
+				consulta = "UPDATE creditos SET estado = 'Abierto' WHERE id = ?";
+			}else if(saldo > 0){
+				consulta = "UPDATE creditos SET estado = 'Pendiente' WHERE id = ?";
+			}
+			pst = cn.prepareStatement(consulta);
+			pst.setInt(1, credito);
+			pst.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(Procedures.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
 }

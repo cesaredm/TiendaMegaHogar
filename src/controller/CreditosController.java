@@ -32,6 +32,7 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 		this.menu = menu;
 		this.creditosModel = creditosModel;
 		this.mostrar("");
+		this.mostrarCreditosPendientes("");
 		this.menu.btnActualizarCredito.setEnabled(false);
 		this.menu.jcFechaCredito.setDate(new Date());
 		this.menu.btnGuardarCredito.addActionListener(this);
@@ -41,7 +42,9 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 		this.menu.btnAddClienteCredito.addActionListener(this);
 		this.menu.optEditarCredito.addActionListener(this);
 		this.menu.optEliminarCredito.addActionListener(this);
+		this.menu.optGenerarPago.addActionListener(this);
 		this.menu.txtBuscarCredito.addCaretListener(this);
+		this.menu.txtBuscarCreditoPendiente.addCaretListener(this);
 		this.menu.txtBuscarAvalCredito.addCaretListener(this);
 		this.menu.txtBuscarClienteCredito.addCaretListener(this);
 		this.menu.tblAvalCredito.addMouseListener(this);
@@ -117,6 +120,12 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 		this.menu.tblCreditos.setModel(this.creditosModel.tableModel);
 	}
 
+	public void mostrarCreditosPendientes(String value) {
+		EstiloTablas.estilosCabeceras(this.menu.tblCreditosPendientes);
+		this.creditosModel.creditosPendientes(value);
+		this.menu.tblCreditosPendientes.setModel(this.creditosModel.tableModel);
+	}
+
 	public void eliminar() {
 		this.filaseleccionada = this.menu.tblCreditos.getSelectedRow();
 		if (this.filaseleccionada != -1) {
@@ -164,6 +173,19 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 		this.menu.jdClienteCredito.setVisible(false);
 	}
 
+	public void generarPago() {
+		this.filaseleccionada = this.menu.tblCreditosPendientes.getSelectedRow();
+		if (this.filaseleccionada != -1) {
+			this.menu.lblIdCreditoPago.setText(this.menu.tblCreditosPendientes.getValueAt(this.filaseleccionada, 0).toString());
+			this.menu.txtNombrePago.setText(this.menu.tblCreditosPendientes.getValueAt(this.filaseleccionada, 1).toString());
+			this.menu.txtNombrePago.setEnabled(false);
+			this.menu.jdIngresarPago.setSize(871, 560);
+			this.menu.jdIngresarPago.setLocationRelativeTo(null);
+			this.menu.jdIngresarPago.setVisible(true);
+			this.menu.jsMontoPago.requestFocus();
+		}
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch (e.getActionCommand()) {
@@ -195,6 +217,10 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 				this.showWindowClientes();
 			}
 			break;
+			case "optGenerarPago": {
+				this.generarPago();
+			}
+			break;
 		}
 	}
 
@@ -206,6 +232,8 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 			this.avales(this.menu.txtBuscarAvalCredito.getText());
 		} else if (e.getSource() == this.menu.txtBuscarClienteCredito) {
 			this.clientes(this.menu.txtBuscarClienteCredito.getText());
+		} else if (e.getSource() == this.menu.txtBuscarCreditoPendiente) {
+			this.mostrarCreditosPendientes(this.menu.txtBuscarCreditoPendiente.getText());
 		}
 	}
 
@@ -215,7 +243,7 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 			if (e.getClickCount() == 2) {
 				this.setAval();
 			}
-		}else if (e.getSource() == this.menu.tblClientesCreditos) {
+		} else if (e.getSource() == this.menu.tblClientesCreditos) {
 			if (e.getClickCount() == 2) {
 				this.setCliente();
 			}
@@ -246,7 +274,7 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 	public void keyPressed(KeyEvent e) {
 		if (e.getSource() == this.menu.tblAvalCredito && e.getKeyCode() == e.VK_ENTER) {
 			this.setAval();
-		}else if (e.getSource() == this.menu.tblClientesCreditos && e.getKeyCode() == e.VK_ENTER) {
+		} else if (e.getSource() == this.menu.tblClientesCreditos && e.getKeyCode() == e.VK_ENTER) {
 			this.setCliente();
 		}
 	}

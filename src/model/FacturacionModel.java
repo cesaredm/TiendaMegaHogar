@@ -22,12 +22,12 @@ public class FacturacionModel extends Conexion {
 
 	/* ---------- FACTURA ----------- */
 	private Timestamp fecha;
-	private int tipoVenta, empleado, credito;
+	private int tipoVenta, empleado, credito, helper;
 	private float total;
 	private String comprador;
 
 	/* ---------- DETALLES ---------- */
-	private int factura, comprobante, producto;
+	private int datoGeneral, producto;
 	private float precio, cantidad, importe;
 	public String[] getProducto;
 
@@ -97,19 +97,11 @@ public class FacturacionModel extends Conexion {
 	}
 
 	public int getFactura() {
-		return factura;
+		return datoGeneral;
 	}
 
 	public void setFactura(int factura) {
-		this.factura = factura;
-	}
-
-	public int getComprobante() {
-		return comprobante;
-	}
-
-	public void setComprobante(int comprobante) {
-		this.comprobante = comprobante;
+		this.datoGeneral = factura;
 	}
 
 	public int getProducto() {
@@ -144,9 +136,17 @@ public class FacturacionModel extends Conexion {
 		this.importe = importe;
 	}
 
+	public int getHelper() {
+		return helper;
+	}
+
+	public void setHelper(int helper) {
+		this.helper = helper;
+	}
+
 	public void guardarFactura() {
 		this.cn = conexion();
-		this.consulta = "INSERT INTO facturas(fecha,tipoVenta,empleado,credito,total,comprador) VALUES(?,?,?,?,?,?)";
+		this.consulta = "INSERT INTO datosGenerales(fecha,tipoVenta,empleado,credito,total,comprador,helper) VALUES(?,?,?,?,?,?,?)";
 		try {
 			this.pst = this.cn.prepareStatement(this.consulta);
 			this.pst.setTimestamp(1, this.fecha);
@@ -159,6 +159,7 @@ public class FacturacionModel extends Conexion {
 			}
 			this.pst.setFloat(5, this.total);
 			this.pst.setString(6, this.comprador);
+			this.pst.setInt(7, this.helper);
 			this.banderin = this.pst.executeUpdate();
 			if (this.banderin > 0) {
 				this.validar = true;
@@ -176,49 +177,16 @@ public class FacturacionModel extends Conexion {
 		}
 	}
 
-	public void guardarComprobante() {
+	public void guardarDetalle() {
 		this.cn = conexion();
-		this.consulta = "INSERT INTO comprobante(fecha,empleado,comprador,total) VALUES(?,?,?,?)";
+		this.consulta = "INSERT INTO detalles(datos,producto,precio,cantidad,importe) VALUES(?,?,?,?,?)";
 		try {
 			this.pst = this.cn.prepareStatement(this.consulta);
-			this.pst.setTimestamp(1, this.fecha);
-			this.pst.setInt(2, this.empleado);
-			this.pst.setString(3, this.comprador);
-			this.pst.setFloat(4, this.total);
-			this.banderin = this.pst.executeUpdate();
-			if(this.banderin > 0)
-			{
-				this.validar = true;
-			}else{
-				this.validar = false;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				this.cn.close();
-			} catch (SQLException ex) {
-				Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
-			}
-		}
-	}
-
-	public void guardarDetalle(boolean bandera) {
-		this.cn = conexion();
-		this.consulta = "INSERT INTO detalles(factura,comprobante,producto,precio,cantidad,importe) VALUES(?,?,?,?,?,?)";
-		try {
-			this.pst = this.cn.prepareStatement(this.consulta);
-			if (this.factura > 0) {
-				this.pst.setInt(1, this.factura);
-				this.pst.setNull(2, java.sql.Types.INTEGER);
-			} else {
-				this.pst.setNull(1, java.sql.Types.INTEGER);
-				this.pst.setInt(2, this.comprobante);
-			}
-			this.pst.setInt(3, this.producto);
-			this.pst.setFloat(4, this.precio);
-			this.pst.setFloat(5, this.cantidad);
-			this.pst.setFloat(6, this.importe);
+			this.pst.setInt(1, this.datoGeneral);
+			this.pst.setInt(2, this.producto);
+			this.pst.setFloat(3, this.precio);
+			this.pst.setFloat(4, this.cantidad);
+			this.pst.setFloat(5, this.importe);
 			this.pst.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -235,7 +203,7 @@ public class FacturacionModel extends Conexion {
 		if (Procedures.venderCodigoBarra(codigo, 1)) {
 			this.cn = conexion();
 			this.consulta = "SELECT * FROM productos AS p"
-			     + " WHERE p.codigoBarra = ?";
+				+ " WHERE p.codigoBarra = ?";
 
 			this.getProducto = new String[6];
 			try {
@@ -267,7 +235,7 @@ public class FacturacionModel extends Conexion {
 		if (Procedures.venderId(producto, cantidad)) {
 			this.cn = conexion();
 			this.consulta = "SELECT * FROM productos AS p"
-			     + " WHERE p.id = ?";
+				+ " WHERE p.id = ?";
 			this.getProducto = new String[6];
 			try {
 				this.pst = this.cn.prepareStatement(this.consulta);
@@ -299,7 +267,7 @@ public class FacturacionModel extends Conexion {
 	public void getProductosVender(String value) {
 		this.cn = conexion();
 		this.consulta = "SELECT p.id,descripcion,precioVenta,stock,m.nombre FROM productos AS p INNER JOIN marca AS m ON(p.marca=m.id)"
-		     + " WHERE CONCAT(p.descripcion,p.codigoBarra,m.nombre) LIKE ? LIMIT 30";
+			+ " WHERE CONCAT(p.descripcion,p.codigoBarra,m.nombre) LIKE ? LIMIT 30";
 		String[] titulos = {"ID", "DESCRIPCION", "MARCA", "PRECIO VENTA", "INVENTARIO"};
 		this.datos = new String[5];
 		this.tableModel = new DefaultTableModel(null, titulos) {
@@ -337,7 +305,7 @@ public class FacturacionModel extends Conexion {
 	public void mostrarCreditos(String value) {
 		this.cn = conexion();
 		this.consulta = "SELECT cr.id, c.nombres,c.apellidos FROM creditos AS cr INNER JOIN clientes AS c ON(cr.cliente=c.id)"
-		     + " WHERE CONCAT(c.nombres,c.apellidos,cr.id) LIKE ? ORDER BY id DESC LIMIT 30";
+			+ " WHERE CONCAT(c.nombres,c.apellidos,cr.id) LIKE ? ORDER BY id DESC LIMIT 30";
 		String[] titulos = {"ID CREDITO", "CLIENTE"};
 		this.datos = new String[2];
 		this.tableModel = new DefaultTableModel(null, titulos) {
@@ -394,7 +362,7 @@ public class FacturacionModel extends Conexion {
 	public int updateNumberFactura() {
 		int number = 0;
 		this.cn = conexion();
-		this.consulta = "SELECT MAX(id) AS number FROM facturas";
+		this.consulta = "SELECT MAX(id) AS number FROM factura";
 		try {
 			this.st = this.cn.createStatement();
 			this.rs = this.st.executeQuery(this.consulta);
@@ -417,6 +385,28 @@ public class FacturacionModel extends Conexion {
 		int number = 0;
 		this.cn = conexion();
 		this.consulta = "SELECT MAX(id) AS number FROM comprobante";
+		try {
+			this.st = this.cn.createStatement();
+			this.rs = this.st.executeQuery(this.consulta);
+			while (this.rs.next()) {
+				number = this.rs.getInt("number") + 1;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		return number;
+	}
+
+	public int updateNumberDato() {
+		int number = 0;
+		this.cn = conexion();
+		this.consulta = "SELECT MAX(id) AS number FROM datosGenerales";
 		try {
 			this.st = this.cn.createStatement();
 			this.rs = this.st.executeQuery(this.consulta);
