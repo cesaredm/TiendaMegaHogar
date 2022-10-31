@@ -134,14 +134,80 @@ public class ProveedoresModel extends Conexion {
 	}
 
 	public void editar() {
-
+		this.cn = conexion();
+		this.consulta = "SELECT * FROM proveedores WHERE id + ?";
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setInt(1, this.id);
+			this.rs = this.pst.executeQuery();
+			while (this.rs.next()) {
+				this.nombre = this.rs.getString("nombre");
+				this.telefono = this.rs.getString("telefono");
+				this.cuentaBancaria = this.rs.getString("cuentaBancaria");
+				this.vendedor = this.rs.getString("vendedor");
+				this.telefonoVendedor = this.rs.getString("telefonoVendedor");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(ProveedoresModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
 	}
 
 	public void actualizar() {
-
+		this.validar();
+		if (this.validar) {
+			this.cn = conexion();
+			this.consulta = "UPDATE proveedores SET nombre=?,telefono=?,cuentaBancaria=?,vendedor=?,telefonoVendedor=? WHERE id = ?";
+			try {
+				this.pst = this.cn.prepareStatement(this.consulta);
+				this.pst.setString(1, nombre);
+				this.pst.setString(2, telefono);
+				this.pst.setString(3, cuentaBancaria);
+				this.pst.setString(4, vendedor);
+				this.pst.setString(5, telefonoVendedor);
+				this.pst.setInt(6, this.id);
+				this.banderin = this.pst.executeUpdate();
+				if (this.banderin > 0) {
+					JOptionPane.showMessageDialog(null, "Proveedor guardado con exito.");
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					this.cn.close();
+				} catch (SQLException ex) {
+					Logger.getLogger(ProveedoresModel.class.getName()).log(Level.SEVERE, null, ex);
+				}
+			}
+		}
 	}
 
 	public void eliminar() {
+		int confirmar = JOptionPane.showConfirmDialog(
+			null,
+			"Seguro que quieres eliminar de forma permanente este proveedor.?",
+			"Advertencia",
+			JOptionPane.YES_NO_OPTION
+		);
+		if (confirmar == JOptionPane.YES_OPTION) {
+			this.cn = conexion();
+			this.consulta = "DELETE FROM proveedores WHERE id = ?";
+			try {
+				this.pst = this.cn.prepareStatement(this.consulta);
+				this.pst.setInt(1, this.id);
+				this.banderin = this.pst.executeUpdate();
+				if (this.banderin > 0) {
+					JOptionPane.showMessageDialog(null, "Proveedor eliminado con exito..");
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 
 	}
 
@@ -149,18 +215,18 @@ public class ProveedoresModel extends Conexion {
 		this.cn = conexion();
 		this.consulta = "SELECT * FROM proveedores WHERE CONCAT(nombre,vendedor) LIKE ? ORDER BY id DESC";
 		this.datos = new String[6];
-		String[] titulos = {"ID","NOMBRE","TELEFONO","CUENTA BANCARIA","VENDEDOR","TEL. VENDEDOR"};
-		this.tableModel = new DefaultTableModel(null,titulos){
+		String[] titulos = {"ID", "NOMBRE", "TELEFONO", "CUENTA BANCARIA", "VENDEDOR", "TEL. VENDEDOR"};
+		this.tableModel = new DefaultTableModel(null, titulos) {
 			@Override
-			public boolean isCellEditable(int row,int col){
+			public boolean isCellEditable(int row, int col) {
 				return false;
 			}
 		};
 		try {
 			this.pst = this.cn.prepareStatement(this.consulta);
-			this.pst.setString(1, "%"+value+"%");
+			this.pst.setString(1, "%" + value + "%");
 			this.rs = this.pst.executeQuery();
-			while(this.rs.next()){
+			while (this.rs.next()) {
 				this.datos[0] = this.rs.getString("id");
 				this.datos[1] = this.rs.getString("nombre");
 				this.datos[2] = this.rs.getString("telefono");
@@ -171,13 +237,13 @@ public class ProveedoresModel extends Conexion {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
+		} finally {
 			try {
 				this.cn.close();
 			} catch (SQLException ex) {
 				Logger.getLogger(ProveedoresModel.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
-		
+
 	}
 }

@@ -377,7 +377,7 @@ public class CreditosModel extends Conexion {
 			while (this.rs.next()) {
 				this.pagos = this.rs.getFloat("pagos");
 				this.credito = this.rs.getFloat("credito");
-				this.saldo = this.credito - this.pagos; 
+				this.saldo = this.credito - this.pagos;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -388,7 +388,7 @@ public class CreditosModel extends Conexion {
 
 	public void creditosPendientes(String value) {
 		this.cn = conexion();
-		int id=0;
+		int id = 0;
 		this.consulta = "SELECT c.id,cl.nombres,apellidos FROM clientes AS cl INNER JOIN creditos AS c ON(cl.id=c.cliente) WHERE CONCAT(c.id,cl.nombres) LIKE ? AND c.estado = 'Pendiente'";
 		String[] titulos = {"N. CREDITO", "CLIENTE", "SALDO"};
 		this.datos = new String[3];
@@ -413,6 +413,76 @@ public class CreditosModel extends Conexion {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(CreditosModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+
+	public void getHistorialCredito() {
+		this.cn = conexion();
+		this.consulta = "SELECT"
+			+ "	p.id,"
+			+ "    p.descripcion,"
+			+ "    p.modelo,"
+			+ "    d.cantidad,"
+			+ "    d.precio,"
+			+ "    d.importe,"
+			+ "    date_format(dg.fecha,'%d-%m-%Y , %r') AS fechaSalida,"
+			+ "    f.id AS factura,"
+			+ "    c.id AS comprobante "
+			+ "FROM"
+			+ "	productos AS p "
+			+ "LEFT JOIN"
+			+ "	detalles AS d ON(p.id=d.producto) "
+			+ "LEFT JOIN"
+			+ "	datosgenerales AS dg ON(d.datos = dg.id) "
+			+ "LEFT JOIN"
+			+ "	factura AS f ON(dg.id=f.datos) "
+			+ "LEFT JOIN"
+			+ "	comprobante AS c ON(dg.id=c.datos) "
+			+ "WHERE dg.credito = ?";
+		String[] titulos = {
+			"ID. PROD",
+			"DESCRIPCION",
+			"MODELO",
+			"CANT.",
+			"PRECIO",
+			"IMPORTE",
+			"FECHA SALIDA",
+			"N. FACT",
+			"N. COMP"
+		};
+		this.tableModel = new DefaultTableModel(null,titulos){
+			@Override
+			public boolean isCellEditable(int row, int col){
+				return false;
+			}
+		};
+
+		this.datos = new String[9];
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setInt(1,this.id);
+			this.rs = this.pst.executeQuery();
+			while (this.rs.next()) {				
+				System.out.println(this.rs.getString("descripcion"));
+				this.datos[0] = this.rs.getString("id");
+				this.datos[1] = this.rs.getString("descripcion");
+				this.datos[2] = this.rs.getString("modelo");
+				this.datos[3] = this.rs.getString("cantidad");
+				this.datos[4] = this.rs.getString("precio");
+				this.datos[5] = this.rs.getString("importe");
+				this.datos[6] = this.rs.getString("fechaSalida");
+				this.datos[7] = this.rs.getString("factura");
+				this.datos[8] = this.rs.getString("comprobante");
+				this.tableModel.addRow(datos);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
 			try {
 				this.cn.close();
 			} catch (SQLException ex) {

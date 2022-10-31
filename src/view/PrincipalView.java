@@ -49,6 +49,9 @@ public class PrincipalView extends javax.swing.JFrame {
                 mnCreditosPendientes = new javax.swing.JPopupMenu();
                 optGenerarPago = new javax.swing.JMenuItem();
                 optHistorialCredito = new javax.swing.JMenuItem();
+                mnPagos = new javax.swing.JPopupMenu();
+                optEditarPago = new javax.swing.JMenuItem();
+                optEliminarPago = new javax.swing.JMenuItem();
                 jdEmpleadosUsuarios = new javax.swing.JDialog();
                 jLabel24 = new javax.swing.JLabel();
                 txtBuscarEmpleadoUsuario = new javax.swing.JTextField();
@@ -106,9 +109,9 @@ public class PrincipalView extends javax.swing.JFrame {
                 tblPagos = new javax.swing.JTable();
                 jLabel79 = new javax.swing.JLabel();
                 txtBuscarPago = new javax.swing.JTextField();
-                mnPagos = new javax.swing.JPopupMenu();
-                optEditarPago = new javax.swing.JMenuItem();
-                optEliminarPago = new javax.swing.JMenuItem();
+                jdHistorialCredito = new javax.swing.JDialog();
+                jScrollPane21 = new javax.swing.JScrollPane();
+                tblHistorialCredito = new javax.swing.JTable();
                 pnlMenuLateral = new javax.swing.JPanel();
                 jLabel1 = new javax.swing.JLabel();
                 jSeparator1 = new javax.swing.JSeparator();
@@ -315,6 +318,15 @@ public class PrincipalView extends javax.swing.JFrame {
                 jLabel74 = new javax.swing.JLabel();
                 pnlProveedores = new javax.swing.JPanel();
                 jLabel75 = new javax.swing.JLabel();
+                jLabel80 = new javax.swing.JLabel();
+                jLabel81 = new javax.swing.JLabel();
+                jLabel82 = new javax.swing.JLabel();
+                jLabel83 = new javax.swing.JLabel();
+                jTextField1 = new javax.swing.JTextField();
+                jTextField2 = new javax.swing.JTextField();
+                jTextField3 = new javax.swing.JTextField();
+                jTextField4 = new javax.swing.JTextField();
+                jTextField5 = new javax.swing.JTextField();
 
                 optEditarUsuario.setText("Editar usuario");
                 optEditarUsuario.setActionCommand("optEditarUsuario");
@@ -371,6 +383,14 @@ public class PrincipalView extends javax.swing.JFrame {
                 optHistorialCredito.setText("Historial");
                 optHistorialCredito.setActionCommand("optHistorialCredito");
                 mnCreditosPendientes.add(optHistorialCredito);
+
+                optEditarPago.setText("Editar");
+                optEditarPago.setActionCommand("optEditarPago");
+                mnPagos.add(optEditarPago);
+
+                optEliminarPago.setText("Eliminar");
+                optEliminarPago.setActionCommand("optEliminarPago");
+                mnPagos.add(optEliminarPago);
 
                 jdEmpleadosUsuarios.setTitle("Buscar empleado");
 
@@ -873,13 +893,34 @@ public class PrincipalView extends javax.swing.JFrame {
                                 .addContainerGap())
                 );
 
-                optEditarPago.setText("Editar");
-                optEditarPago.setActionCommand("optEditarPago");
-                mnPagos.add(optEditarPago);
+                jdHistorialCredito.setTitle("Historial de credito");
 
-                optEliminarPago.setText("Eliminar");
-                optEliminarPago.setActionCommand("optEliminarPago");
-                mnPagos.add(optEliminarPago);
+                tblHistorialCredito.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                tblHistorialCredito.setModel(new javax.swing.table.DefaultTableModel(
+                        new Object [][] {
+                                {null, null, null, null},
+                                {null, null, null, null},
+                                {null, null, null, null},
+                                {null, null, null, null}
+                        },
+                        new String [] {
+                                "Title 1", "Title 2", "Title 3", "Title 4"
+                        }
+                ));
+                tblHistorialCredito.setRowHeight(24);
+                tblHistorialCredito.setShowGrid(true);
+                jScrollPane21.setViewportView(tblHistorialCredito);
+
+                javax.swing.GroupLayout jdHistorialCreditoLayout = new javax.swing.GroupLayout(jdHistorialCredito.getContentPane());
+                jdHistorialCredito.getContentPane().setLayout(jdHistorialCreditoLayout);
+                jdHistorialCreditoLayout.setHorizontalGroup(
+                        jdHistorialCreditoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane21, javax.swing.GroupLayout.DEFAULT_SIZE, 1190, Short.MAX_VALUE)
+                );
+                jdHistorialCreditoLayout.setVerticalGroup(
+                        jdHistorialCreditoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane21, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+                );
 
                 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -2666,16 +2707,16 @@ public class PrincipalView extends javax.swing.JFrame {
                                         .addComponent(btnMostrarFacturasEmitidas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel74)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 213, Short.MAX_VALUE)
+                                .addGap(213, 213, 213)
                                 .addComponent(jLabel73)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane18, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jScrollPane18, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
                                 .addContainerGap())
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addGap(63, 63, 63)
-                                        .addComponent(jScrollPane19, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap(241, Short.MAX_VALUE)))
+                                        .addComponent(jScrollPane19, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+                                        .addGap(241, 241, 241)))
                 );
 
                 jTabbedPane4.addTab("Facturas Emitidas", jPanel3);
@@ -2698,7 +2739,30 @@ public class PrincipalView extends javax.swing.JFrame {
 
                 pnlVistaPrincipal.add(pnlReportes, "card7");
 
-                jLabel75.setText("jLabel75");
+                jLabel75.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                jLabel75.setText("Nombre:");
+
+                jLabel80.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                jLabel80.setText("Vendedor:");
+
+                jLabel81.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                jLabel81.setText("Telefono:");
+
+                jLabel82.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                jLabel82.setText("Telefono de vendedor:");
+
+                jLabel83.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                jLabel83.setText("Cuenta Bancaria:");
+
+                jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+                jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+                jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+                jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+                jTextField5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
                 javax.swing.GroupLayout pnlProveedoresLayout = new javax.swing.GroupLayout(pnlProveedores);
                 pnlProveedores.setLayout(pnlProveedoresLayout);
@@ -2706,15 +2770,47 @@ public class PrincipalView extends javax.swing.JFrame {
                         pnlProveedoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(pnlProveedoresLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel75)
-                                .addContainerGap(1060, Short.MAX_VALUE))
+                                .addGroup(pnlProveedoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel75)
+                                        .addComponent(jLabel80)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(24, 24, 24)
+                                .addGroup(pnlProveedoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel82)
+                                        .addGroup(pnlProveedoresLayout.createSequentialGroup()
+                                                .addGroup(pnlProveedoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel81)
+                                                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGap(18, 18, 18)
+                                                .addGroup(pnlProveedoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(jLabel83))))
+                                .addContainerGap(389, Short.MAX_VALUE))
                 );
                 pnlProveedoresLayout.setVerticalGroup(
                         pnlProveedoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(pnlProveedoresLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jLabel75)
-                                .addContainerGap(527, Short.MAX_VALUE))
+                                .addGroup(pnlProveedoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel75)
+                                        .addComponent(jLabel81)
+                                        .addComponent(jLabel83))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pnlProveedoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pnlProveedoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel80)
+                                        .addComponent(jLabel82))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pnlProveedoresLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap(433, Short.MAX_VALUE))
                 );
 
                 pnlVistaPrincipal.add(pnlProveedores, "card8");
@@ -2731,7 +2827,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 layout.setVerticalGroup(
                         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(pnlMenuLateral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pnlVistaPrincipal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(pnlVistaPrincipal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 );
 
                 pack();
@@ -2889,6 +2985,10 @@ public class PrincipalView extends javax.swing.JFrame {
         private javax.swing.JLabel jLabel78;
         private javax.swing.JLabel jLabel79;
         private javax.swing.JLabel jLabel8;
+        private javax.swing.JLabel jLabel80;
+        private javax.swing.JLabel jLabel81;
+        private javax.swing.JLabel jLabel82;
+        private javax.swing.JLabel jLabel83;
         private javax.swing.JLabel jLabel9;
         private javax.swing.JPanel jPanel1;
         private javax.swing.JPanel jPanel10;
@@ -2918,6 +3018,7 @@ public class PrincipalView extends javax.swing.JFrame {
         private javax.swing.JScrollPane jScrollPane19;
         private javax.swing.JScrollPane jScrollPane2;
         private javax.swing.JScrollPane jScrollPane20;
+        private javax.swing.JScrollPane jScrollPane21;
         private javax.swing.JScrollPane jScrollPane3;
         private javax.swing.JScrollPane jScrollPane4;
         private javax.swing.JScrollPane jScrollPane5;
@@ -2930,6 +3031,11 @@ public class PrincipalView extends javax.swing.JFrame {
         private javax.swing.JTabbedPane jTabbedPane2;
         private javax.swing.JTabbedPane jTabbedPane3;
         private javax.swing.JTabbedPane jTabbedPane4;
+        private javax.swing.JTextField jTextField1;
+        private javax.swing.JTextField jTextField2;
+        private javax.swing.JTextField jTextField3;
+        private javax.swing.JTextField jTextField4;
+        private javax.swing.JTextField jTextField5;
         public com.toedter.calendar.JDateChooser jcFechaCredito;
         public com.toedter.calendar.JDateChooser jcFechaFactura;
         public com.toedter.calendar.JDateChooser jcFechaFacturasEmitidas;
@@ -2940,6 +3046,7 @@ public class PrincipalView extends javax.swing.JFrame {
         public javax.swing.JDialog jdClienteCredito;
         public javax.swing.JDialog jdCreditoFacturacion;
         public javax.swing.JDialog jdEmpleadosUsuarios;
+        public javax.swing.JDialog jdHistorialCredito;
         public javax.swing.JDialog jdIngresarPago;
         public javax.swing.JDialog jdKardex;
         public javax.swing.JDialog jdProductosFacturacion;
@@ -3010,6 +3117,7 @@ public class PrincipalView extends javax.swing.JFrame {
         public javax.swing.JTable tblEmpleados;
         public javax.swing.JTable tblEmpleadosUsuario;
         public javax.swing.JTable tblFacturacion;
+        public javax.swing.JTable tblHistorialCredito;
         public javax.swing.JTable tblMarcas;
         public javax.swing.JTable tblOtrosMovimientosKardex;
         public javax.swing.JTable tblPagos;

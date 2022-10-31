@@ -43,6 +43,7 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 		this.menu.optEditarCredito.addActionListener(this);
 		this.menu.optEliminarCredito.addActionListener(this);
 		this.menu.optGenerarPago.addActionListener(this);
+		this.menu.optHistorialCredito.addActionListener(this);
 		this.menu.txtBuscarCredito.addCaretListener(this);
 		this.menu.txtBuscarCreditoPendiente.addCaretListener(this);
 		this.menu.txtBuscarAvalCredito.addCaretListener(this);
@@ -186,6 +187,19 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 		}
 	}
 
+	public void historialCredito(){
+		EstiloTablas.estilosCabeceras(this.menu.tblHistorialCredito);
+		this.menu.jdHistorialCredito.setSize(1190, 550);
+		this.menu.jdHistorialCredito.setLocationRelativeTo(null);
+		this.menu.jdHistorialCredito.setVisible(true);
+		this.filaseleccionada = this.menu.tblCreditosPendientes.getSelectedRow();
+		if(this.filaseleccionada != -1){
+			this.creditosModel.setId(Integer.parseInt(this.menu.tblCreditosPendientes.getValueAt(this.filaseleccionada, 0).toString()));
+			this.creditosModel.getHistorialCredito();
+			this.menu.tblHistorialCredito.setModel(this.creditosModel.tableModel);
+		}
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		switch (e.getActionCommand()) {
@@ -221,6 +235,9 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 				this.generarPago();
 			}
 			break;
+			case "optHistorialCredito":{
+				this.historialCredito();
+			}break;
 		}
 	}
 
