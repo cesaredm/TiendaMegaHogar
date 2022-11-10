@@ -22,7 +22,7 @@ public class ProveedoresModel extends Conexion {
 	String[] datos;
 
 	private String consulta;
-	public boolean validar;
+	public boolean validar = true;
 	public DefaultTableModel tableModel;
 	PreparedStatement pst;
 	Connection cn;
@@ -92,16 +92,18 @@ public class ProveedoresModel extends Conexion {
 		if (this.nombre.equals("")) {
 			this.validar = false;
 			this.message = "Complete el nombre de proveedor.";
+			JOptionPane.showMessageDialog(null, message);
 		} else if (this.telefono.equals("")) {
 			this.validar = false;
 			this.message = "Complete el numero de telefono.";
+			JOptionPane.showMessageDialog(null, message);
 		} else if (this.vendedor.equals("")) {
 			this.validar = false;
 			this.message = "Complete el nombre de vendedor.";
+			JOptionPane.showMessageDialog(null, message);
 		} else {
 			this.validar = !this.telefonoVendedor.equals("");
 		}
-		JOptionPane.showMessageDialog(null, message);
 	}
 
 	public void guardar() {
