@@ -101,8 +101,12 @@ public class ProveedoresModel extends Conexion {
 			this.validar = false;
 			this.message = "Complete el nombre de vendedor.";
 			JOptionPane.showMessageDialog(null, message);
-		} else {
-			this.validar = !this.telefonoVendedor.equals("");
+		} else if(this.telefonoVendedor.equals("")){
+			this.validar = false; 
+			this.message = "Complete el campo de telefono vendedor.";
+			JOptionPane.showMessageDialog(null, message);
+		}else{
+			this.validar = true;
 		}
 	}
 
@@ -175,7 +179,7 @@ public class ProveedoresModel extends Conexion {
 				this.pst.setInt(6, this.id);
 				this.banderin = this.pst.executeUpdate();
 				if (this.banderin > 0) {
-					JOptionPane.showMessageDialog(null, "Proveedor guardado con exito.");
+					JOptionPane.showMessageDialog(null, "Proveedor actualizado con exito.");
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
