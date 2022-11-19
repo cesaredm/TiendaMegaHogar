@@ -101,7 +101,7 @@ public class FacturacionController implements KeyListener, CaretListener, MouseL
 		this.menu.txtCodigoBarraFacturacion.requestFocus();
 	}
 
-	public String CleanChars(String cadena) {
+	public static String CleanChars(String cadena) {
 		StringBuilder myString = new StringBuilder(cadena);
 		char[] signos = {','};
 		for (int i = 0; i < cadena.length(); i++) {
