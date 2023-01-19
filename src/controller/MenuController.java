@@ -50,6 +50,7 @@ public class MenuController implements MouseListener, KeyListener {
 		this.menu.pnlOpcionFacturacion.addMouseListener(this);
 		this.menu.pnlOpcionReportes.addMouseListener(this);
 		this.menu.pnlOpcionProveedores.addMouseListener(this);
+		FacturacionController.createInstanceController(menu, facturacionModel);
 
 	}
 

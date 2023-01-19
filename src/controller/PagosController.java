@@ -76,6 +76,9 @@ public class PagosController implements ActionListener, CaretListener {
 		this.menu.jsMontoPago.setValue(this.pagosModel.getMonto());
 		this.menu.btnGuardarPago.setEnabled(false);
 		this.menu.btnActualizarPago.setEnabled(true);
+		this.menu.jdIngresarPago.setSize(275, 260);
+		this.menu.jdIngresarPago.setVisible(true);
+		this.menu.jdIngresarPago.setLocationRelativeTo(null);
 	}
 
 	public void eliminar() {

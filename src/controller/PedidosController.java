@@ -7,6 +7,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -25,6 +26,8 @@ public class PedidosController implements ActionListener, CaretListener, MouseLi
 	PedidosModel pedidosModel;
 	int filaseleccionada;
 	float cantidad, precio, importe, total;
+	int proveedor;
+	Date fecha;
 	DecimalFormat formato;
 	String[] titulos = {"ID", "DESCRIPCION", "PRECIO", "CANTIDAD", "IMPORTE"};
 	DefaultTableModel modelo;
@@ -33,8 +36,10 @@ public class PedidosController implements ActionListener, CaretListener, MouseLi
 		this.menu = menu;
 		this.pedidosModel = pedidosModel;
 		EstiloTablas.estilosCabeceras(this.menu.tblItemsPedidos);
+		EstiloTablas.estilosCabeceras(this.menu.tblPagosPedidos);
 		this.formato = new DecimalFormat("##,###,###,###,##0.00");
 		this.modelo = new DefaultTableModel(null, this.titulos);
+		this.getPedidos();
 		//actionListener
 		this.menu.btnAgregarProductoPedido.addActionListener(this);
 		this.menu.btnProveedorPedido.addActionListener(this);
@@ -48,6 +53,7 @@ public class PedidosController implements ActionListener, CaretListener, MouseLi
 		//MouseListener
 		this.menu.tblProveedoresPedidos.addMouseListener(this);
 		this.menu.tblBuscarProductoPedido.addMouseListener(this);
+		this.menu.tblPedidos.addMouseListener(this);
 		//KeyListener
 		this.menu.tblBuscarProductoPedido.addKeyListener(this);
 
@@ -75,7 +81,7 @@ public class PedidosController implements ActionListener, CaretListener, MouseLi
 		this.filaseleccionada = this.menu.tblBuscarProductoPedido.getSelectedRow();
 		this.menu.txtIdProductoPediddo.setText(this.menu.tblBuscarProductoPedido.getValueAt(this.filaseleccionada, 0).toString());
 		this.menu.txtDescripcionProductoPedido.setText(this.menu.tblBuscarProductoPedido.getValueAt(this.filaseleccionada, 1).toString());
-		this.menu.jsPrecioProductoPedidos.setValue(Float.parseFloat(this.menu.tblBuscarProductoPedido.getValueAt(this.filaseleccionada, 2).toString()));
+		this.menu.jsPrecioProductoPedidos.setValue(Float.parseFloat(FacturacionController.CleanChars(this.menu.tblBuscarProductoPedido.getValueAt(this.filaseleccionada, 2).toString())));
 		this.menu.jsCantidadProductoPedidos.setValue(0.00);
 	}
 
@@ -126,17 +132,27 @@ public class PedidosController implements ActionListener, CaretListener, MouseLi
 
 	}
 
+	public void setDatos(){
+		this.proveedor = (this.menu.lblIdProveedor.getText().equals("id")) ? 0 : Integer.parseInt(this.menu.lblIdProveedor.getText());
+		this.fecha = (this.menu.jcFechaPedido.getDate() == null) ? new Date() : this.menu.jcFechaPedido.getDate();
+	}
+
 	public void guardarPedido() {
-		//TODO hacerlas validacion correspondientes al guarddo de pedidos y detalles de pedidos
 		try {
-			this.pedidosModel.setProveedor(Integer.parseInt(this.menu.lblIdProveedor.getText()));
-			this.pedidosModel.setFecha(new java.sql.Timestamp(this.menu.jcFechaPedido.getDate().getTime()));
-			this.pedidosModel.setTotal(Float.parseFloat(FacturacionController.CleanChars(this.menu.lblTotalPedido.getText())));
-			this.pedidosModel.setEstado(this.menu.cmbEstadoPedido.getSelectedItem().toString());
-			this.pedidosModel.guardarPedido();
-			if(pedidosModel.idInsertado > 0){
-				this.guardarDetallePedido();
-				this.limpiarTablaPedido();
+			this.setDatos();
+			int filas = this.menu.tblItemsPedidos.getRowCount();
+			if (filas > 0) {
+				this.pedidosModel.setProveedor(this.proveedor);
+				this.pedidosModel.setFecha(new java.sql.Timestamp(this.fecha.getTime()));
+				this.pedidosModel.setTotal(Float.parseFloat(FacturacionController.CleanChars(this.menu.lblTotalPedido.getText())));
+				this.pedidosModel.setEstado(this.menu.cmbEstadoPedido.getSelectedItem().toString());
+				this.pedidosModel.guardarPedido();
+				if (pedidosModel.idInsertado > 0) {
+					this.guardarDetallePedido();
+					this.limpiarTablaPedido();
+				}
+			}else{
+				JOptionPane.showMessageDialog(null, "El pedido esta vacio.!");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -145,14 +161,21 @@ public class PedidosController implements ActionListener, CaretListener, MouseLi
 	}
 
 	public void guardarDetallePedido() {
-			int filas = this.menu.tblItemsPedidos.getRowCount();
-			for (int i = 0; i < filas; i++) {
-				this.pedidosModel.setProducto(Integer.parseInt(this.menu.tblItemsPedidos.getValueAt(i, 0).toString()));
-				this.pedidosModel.setPrecio(Float.parseFloat(FacturacionController.CleanChars(this.menu.tblItemsPedidos.getValueAt(i, 2).toString())));
-				this.pedidosModel.setCantidad(Float.parseFloat(FacturacionController.CleanChars(this.menu.tblItemsPedidos.getValueAt(i, 3).toString())));
-				this.pedidosModel.setImporte(Float.parseFloat(FacturacionController.CleanChars(this.menu.tblItemsPedidos.getValueAt(i, 4).toString())));
-				this.pedidosModel.guardarDetallePedido();
-			}
+		int filas = this.menu.tblItemsPedidos.getRowCount();
+		for (int i = 0; i < filas; i++) {
+			this.pedidosModel.setProducto(Integer.parseInt(this.menu.tblItemsPedidos.getValueAt(i, 0).toString()));
+			this.pedidosModel.setPrecio(Float.parseFloat(FacturacionController.CleanChars(this.menu.tblItemsPedidos.getValueAt(i, 2).toString())));
+			this.pedidosModel.setCantidad(Float.parseFloat(FacturacionController.CleanChars(this.menu.tblItemsPedidos.getValueAt(i, 3).toString())));
+			this.pedidosModel.setImporte(Float.parseFloat(FacturacionController.CleanChars(this.menu.tblItemsPedidos.getValueAt(i, 4).toString())));
+			this.pedidosModel.guardarDetallePedido();
+		}
+		JOptionPane.showMessageDialog(null, "Pedido Guardado con exito.");
+	}
+
+	public void getPedidos(){
+		EstiloTablas.estilosCabeceras(this.menu.tblPedidos);
+		this.pedidosModel.getPedidos();
+		this.menu.tblPedidos.setModel(this.pedidosModel.tableModel);
 	}
 
 	@Override
@@ -176,9 +199,10 @@ public class PedidosController implements ActionListener, CaretListener, MouseLi
 				this.limpiarTablaPedido();
 			}
 			break;
-			case "btnGuardarPedido":{
+			case "btnGuardarPedido": {
 				this.guardarPedido();
-			}break;
+			}
+			break;
 			default:
 				throw new AssertionError();
 		}
@@ -208,6 +232,17 @@ public class PedidosController implements ActionListener, CaretListener, MouseLi
 			if (e.getClickCount() == 1) {
 				this.seleccionProducto();
 			}
+		}
+		if(e.getSource().equals(this.menu.tblPedidos)){
+			if (e.getClickCount() == 2) {
+				this.filaseleccionada = this.menu.tblPedidos.getSelectedRow();
+				this.pedidosModel.getPagosPorPedido(
+					Integer.parseInt(this.menu.tblPedidos.getValueAt(this.filaseleccionada, 0).toString())
+				);
+				this.menu.tblPagosPedidos.setModel(this.pedidosModel.tableModel);
+				this.menu.lblIdPedido.setText(this.menu.tblPedidos.getValueAt(this.filaseleccionada, 0).toString());
+			}
+	
 		}
 	}
 

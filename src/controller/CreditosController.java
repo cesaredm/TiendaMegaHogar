@@ -180,7 +180,7 @@ public class CreditosController implements ActionListener, CaretListener, MouseL
 			this.menu.lblIdCreditoPago.setText(this.menu.tblCreditosPendientes.getValueAt(this.filaseleccionada, 0).toString());
 			this.menu.txtNombrePago.setText(this.menu.tblCreditosPendientes.getValueAt(this.filaseleccionada, 1).toString());
 			this.menu.txtNombrePago.setEnabled(false);
-			this.menu.jdIngresarPago.setSize(871, 560);
+			this.menu.jdIngresarPago.setSize(275, 260);
 			this.menu.jdIngresarPago.setLocationRelativeTo(null);
 			this.menu.jdIngresarPago.setVisible(true);
 			this.menu.jsMontoPago.requestFocus();
