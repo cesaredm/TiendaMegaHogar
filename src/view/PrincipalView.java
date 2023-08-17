@@ -5,19 +5,27 @@
  */
 package view;
 
+import javax.swing.ImageIcon;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 /**
  *
  * @author CESAR DIAZ MARADIAGA
  */
 public class PrincipalView extends javax.swing.JFrame {
 
+	ImageIcon img;
+
 	/**
 	 * Creates new form PrincipalView
 	 */
 	public PrincipalView() {
+		img = new ImageIcon(this.getClass().getResource("/img/icono100.png"));
 		initComponents();
 		this.setTitle("Tienda Mega Hogar");
+		setIconImage(img.getImage());
 		this.setLocationRelativeTo(null);
+		AutoCompleteDecorator.decorate(cmbMarcasProducto);
 	}
 
 	/**
@@ -56,6 +64,8 @@ public class PrincipalView extends javax.swing.JFrame {
                 mnProveedores = new javax.swing.JPopupMenu();
                 optEditarProveedor = new javax.swing.JMenuItem();
                 optEliminarProveedor = new javax.swing.JMenuItem();
+                mnTablaPedidos = new javax.swing.JPopupMenu();
+                optListarDetallesPedidos = new javax.swing.JMenuItem();
                 jdEmpleadosUsuarios = new javax.swing.JDialog();
                 jLabel24 = new javax.swing.JLabel();
                 txtBuscarEmpleadoUsuario = new javax.swing.JTextField();
@@ -117,6 +127,9 @@ public class PrincipalView extends javax.swing.JFrame {
                 tblProveedoresPedidos = new javax.swing.JTable();
                 txtBuscarProveedorPedido = new javax.swing.JTextField();
                 jLabel87 = new javax.swing.JLabel();
+                jdDetallesPedidos = new javax.swing.JDialog();
+                jScrollPane28 = new javax.swing.JScrollPane();
+                tblDetallesPedidos = new javax.swing.JTable();
                 pnlMenuLateral = new javax.swing.JPanel();
                 jLabel1 = new javax.swing.JLabel();
                 jSeparator1 = new javax.swing.JSeparator();
@@ -472,7 +485,12 @@ public class PrincipalView extends javax.swing.JFrame {
                 optEliminarProveedor.setActionCommand("optEliminarProveedor");
                 mnProveedores.add(optEliminarProveedor);
 
+                optListarDetallesPedidos.setText("Listar detalles");
+                optListarDetallesPedidos.setActionCommand("optListarDetallesPedidos");
+                mnTablaPedidos.add(optListarDetallesPedidos);
+
                 jdEmpleadosUsuarios.setTitle("Buscar empleado");
+                jdEmpleadosUsuarios.setIconImage(this.img.getImage());
 
                 jLabel24.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 jLabel24.setText("Buscar por (Nombres,Apellidos,ID):");
@@ -518,6 +536,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 );
 
                 jdKardex.setTitle("Kardex");
+                jdKardex.setIconImage(this.img.getImage());
 
                 jTabbedPane2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -680,6 +699,8 @@ public class PrincipalView extends javax.swing.JFrame {
                                 .addComponent(jTabbedPane2))
                 );
 
+                jdAvalCreditos.setIconImage(this.img.getImage());
+
                 jLabel57.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 jLabel57.setText("Buscar por Nombre:");
 
@@ -723,6 +744,8 @@ public class PrincipalView extends javax.swing.JFrame {
                                 .addComponent(jScrollPane11, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))
                 );
 
+                jdClienteCredito.setIconImage(this.img.getImage());
+
                 jLabel58.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 jLabel58.setText("Buscar por nombre:");
 
@@ -765,6 +788,8 @@ public class PrincipalView extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane12, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE))
                 );
+
+                jdProductosFacturacion.setIconImage(this.img.getImage());
 
                 jLabel69.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 jLabel69.setText("Buscar por (Descripcion,marca,codigo de Barras):");
@@ -810,6 +835,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 );
 
                 jdCreditoFacturacion.setTitle("Cuentas de credito");
+                jdCreditoFacturacion.setIconImage(this.img.getImage());
 
                 jLabel65.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 jLabel65.setText("Buscar por(Nombres,Apellidos,N. de credito):");
@@ -855,6 +881,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 );
 
                 jdIngresarPago.setTitle("Ingresar pago");
+                jdIngresarPago.setIconImage(this.img.getImage());
 
                 jLabel76.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 jLabel76.setText("Fecha:");
@@ -938,6 +965,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 );
 
                 jdHistorialCredito.setTitle("Historial de credito");
+                jdHistorialCredito.setIconImage(this.img.getImage());
 
                 tblHistorialCredito.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 tblHistorialCredito.setModel(new javax.swing.table.DefaultTableModel(
@@ -967,6 +995,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 );
 
                 jdProveedorPedido.setTitle("Buscar proveedor");
+                jdProveedorPedido.setIconImage(this.img.getImage());
 
                 tblProveedoresPedidos.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
                 tblProveedoresPedidos.setModel(new javax.swing.table.DefaultTableModel(
@@ -1010,6 +1039,34 @@ public class PrincipalView extends javax.swing.JFrame {
                                         .addComponent(jLabel87))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane25, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE))
+                );
+
+                jdDetallesPedidos.setIconImage(this.img.getImage());
+
+                tblDetallesPedidos.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                tblDetallesPedidos.setModel(new javax.swing.table.DefaultTableModel(
+                        new Object [][] {
+                                {null, null, null, null},
+                                {null, null, null, null},
+                                {null, null, null, null},
+                                {null, null, null, null}
+                        },
+                        new String [] {
+                                "Title 1", "Title 2", "Title 3", "Title 4"
+                        }
+                ));
+                tblDetallesPedidos.setRowHeight(24);
+                jScrollPane28.setViewportView(tblDetallesPedidos);
+
+                javax.swing.GroupLayout jdDetallesPedidosLayout = new javax.swing.GroupLayout(jdDetallesPedidos.getContentPane());
+                jdDetallesPedidos.getContentPane().setLayout(jdDetallesPedidosLayout);
+                jdDetallesPedidosLayout.setHorizontalGroup(
+                        jdDetallesPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane28, javax.swing.GroupLayout.DEFAULT_SIZE, 937, Short.MAX_VALUE)
+                );
+                jdDetallesPedidosLayout.setVerticalGroup(
+                        jdDetallesPedidosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane28, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
                 );
 
                 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -2368,6 +2425,7 @@ public class PrincipalView extends javax.swing.JFrame {
                                 "Title 1", "Title 2", "Title 3", "Title 4"
                         }
                 ));
+                tblPedidos.setComponentPopupMenu(mnTablaPedidos);
                 tblPedidos.setRowHeight(24);
                 tblPedidos.setShowGrid(true);
                 jScrollPane26.setViewportView(tblPedidos);
@@ -2800,13 +2858,13 @@ public class PrincipalView extends javax.swing.JFrame {
                                                                                         .addComponent(jLabel48)
                                                                                         .addComponent(jLabel42)
                                                                                         .addComponent(txtDniCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
-                                                                                        .addComponent(txtLugarTrabajoCliente))
-                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                                                        .addComponent(jLabel56)
-                                                                                        .addComponent(jLabel47)
-                                                                                        .addComponent(txtBarrioCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
-                                                                                        .addComponent(txtMunicipioCliente))))))
+                                                                                        .addComponent(txtLugarTrabajoCliente))))
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                        .addComponent(jLabel56)
+                                                                        .addComponent(jLabel47)
+                                                                        .addComponent(txtBarrioCliente, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                                                                        .addComponent(txtMunicipioCliente))))
                                                 .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap())
                 );
@@ -2859,7 +2917,7 @@ public class PrincipalView extends javax.swing.JFrame {
                                         .addComponent(jLabel50)
                                         .addComponent(txtBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                                .addComponent(jScrollPane9, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
                                 .addContainerGap())
                 );
 
@@ -3528,7 +3586,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 layout.setVerticalGroup(
                         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(pnlMenuLateral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pnlVistaPrincipal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(pnlVistaPrincipal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 );
 
                 pack();
@@ -3761,6 +3819,7 @@ public class PrincipalView extends javax.swing.JFrame {
         private javax.swing.JScrollPane jScrollPane25;
         private javax.swing.JScrollPane jScrollPane26;
         private javax.swing.JScrollPane jScrollPane27;
+        private javax.swing.JScrollPane jScrollPane28;
         private javax.swing.JScrollPane jScrollPane3;
         private javax.swing.JScrollPane jScrollPane4;
         private javax.swing.JScrollPane jScrollPane5;
@@ -3785,6 +3844,7 @@ public class PrincipalView extends javax.swing.JFrame {
         public javax.swing.JDialog jdAvalCreditos;
         public javax.swing.JDialog jdClienteCredito;
         public javax.swing.JDialog jdCreditoFacturacion;
+        public javax.swing.JDialog jdDetallesPedidos;
         public javax.swing.JDialog jdEmpleadosUsuarios;
         public javax.swing.JDialog jdHistorialCredito;
         public javax.swing.JDialog jdIngresarPago;
@@ -3827,6 +3887,7 @@ public class PrincipalView extends javax.swing.JFrame {
         private javax.swing.JPopupMenu mnPagos;
         private javax.swing.JPopupMenu mnProductos;
         public javax.swing.JPopupMenu mnProveedores;
+        public javax.swing.JPopupMenu mnTablaPedidos;
         private javax.swing.JPopupMenu mnUsuarios;
         public javax.swing.JMenuItem optAgregarProducto;
         public javax.swing.JMenuItem optEditarCliente;
@@ -3846,6 +3907,7 @@ public class PrincipalView extends javax.swing.JFrame {
         public javax.swing.JMenuItem optGenerarPago;
         public javax.swing.JMenuItem optHistorialCredito;
         public javax.swing.JMenuItem optKardexProducto;
+        public javax.swing.JMenuItem optListarDetallesPedidos;
         public javax.swing.JPanel pnlClientesCreditos;
         public javax.swing.JPanel pnlEmpleados;
         public javax.swing.JPanel pnlFacturacion;
@@ -3869,6 +3931,7 @@ public class PrincipalView extends javax.swing.JFrame {
         public javax.swing.JTable tblCreditos;
         public javax.swing.JTable tblCreditosFacturacion;
         public javax.swing.JTable tblCreditosPendientes;
+        public javax.swing.JTable tblDetallesPedidos;
         public javax.swing.JTable tblEmpleados;
         public javax.swing.JTable tblEmpleadosUsuario;
         public javax.swing.JTable tblFacturacion;

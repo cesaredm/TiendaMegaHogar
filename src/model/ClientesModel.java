@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  *
@@ -19,6 +20,7 @@ public class ClientesModel extends Conexion {
 
 	private int id;
 	private String nombres, apellidos, direccionExacta, lugarTrabajo, municipio, departamento, barrio, telefono, dni;
+	private int aval;
 	public boolean validar;
 
 	Connection cn;
@@ -26,6 +28,7 @@ public class ClientesModel extends Conexion {
 	PreparedStatement pst;
 	ResultSet rs;
 	public DefaultTableModel tableModel;
+	public DefaultComboBoxModel comboModel;
 	private String[] datos;
 	private String consulta;
 	private int banderin;
@@ -114,6 +117,16 @@ public class ClientesModel extends Conexion {
 		this.dni = dni;
 	}
 
+	public int getAval() {
+		return aval;
+	}
+
+	public void setAval(int aval) {
+		this.aval = aval;
+	}
+
+	
+
 	public void validar() {
 		if (this.nombres.equals("")) {
 			this.validar = false;
@@ -134,8 +147,8 @@ public class ClientesModel extends Conexion {
 		this.validar();
 		if (this.validar) {
 			this.cn = conexion();
-			this.consulta = "INSERT INTO clientes(nombres,apellidos,dni,direccion,departamento,municipio,barrio,lugarTrabajo,telefono)"
-				+ " VALUES(?,?,?,?,?,?,?,?,?)";
+			this.consulta = "INSERT INTO clientes(nombres,apellidos,dni,direccion,departamento,municipio,barrio,lugarTrabajo,"
+				+ "telefono) VALUES(?,?,?,?,?,?,?,?,?)";
 			try {
 				this.pst = this.cn.prepareStatement(this.consulta);
 				this.pst.setString(1, this.nombres);
@@ -172,6 +185,28 @@ public class ClientesModel extends Conexion {
 			this.pst = this.cn.prepareStatement(this.consulta);
 			
 		} catch (Exception e) {
+		}
+	}
+
+	//TODO pasar esta funcion a modelo de avales
+	public void getAvales() {
+		this.cn = conexion();
+		this.consulta = "SELECT * FROM avales ORDER BY nombres ASC";
+		this.comboModel = new DefaultComboBoxModel();
+		try {
+			this.st = this.cn.createStatement();
+			this.rs = this.st.executeQuery(this.consulta);
+			while (this.rs.next()) {
+				this.comboModel.addElement(new CmbAvales(this.rs.getInt("id"), this.rs.getString("nombres"), this.rs.getString("apellidos")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(ProductosModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 	}
 

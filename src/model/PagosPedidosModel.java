@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author HOLA
@@ -17,9 +18,11 @@ public class PagosPedidosModel extends Conexion{
 	public int idPagoInsertado;
 	private float monto;
 
+	String[] datos;
 	public boolean validar =  true;
 	String consulta;
 	public int banderin;
+	public DefaultTableModel tableModel;
 
 	Connection cn;
 	ResultSet rs;
@@ -83,5 +86,38 @@ public class PagosPedidosModel extends Conexion{
 				Logger.getLogger(PagosPedidosModel.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
+	}
+
+	public void getPagos(int pedido){
+		this.consulta = "SELECT *, DATE_FORMAT(fecha,'%d-%m-%Y, %r') AS f FROM pagospedidos WHERE pedido = ?";
+		try {
+			this.cn = conexion();
+			this.pst = this.cn.prepareStatement(consulta);
+			this.pst.setInt(1, pedido);
+			this.rs = this.pst.executeQuery();
+			String[] titles = {"Id","monto", "Fecha"};
+			this.datos = new String[3];	
+			this.tableModel = new DefaultTableModel(null, titles){
+				@Override
+				public boolean isCellEditable(int row, int col){
+					return false;
+				}
+			};
+			while (this.rs.next()) {				
+				this.datos[0] = this.rs.getString("id");
+				this.datos[1] = this.rs.getString("monto");
+				this.datos[2] = this.rs.getString("f");
+				this.tableModel.addRow(datos);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(PagosPedidosModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	
 	}
 }

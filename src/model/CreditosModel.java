@@ -303,9 +303,9 @@ public class CreditosModel extends Conexion {
 
 	public void getAvales(String value) {
 		this.cn = conexion();
-		this.consulta = "SELECT a.id,c.nombres,apellidos,dni FROM avales AS a INNER JOIN clientes AS c ON(a.cliente=c.id) WHERE "
-			+ "CONCAT(c.id,c.nombres,c.apellidos) LIKE ? LIMIT 20";
-		String[] titulos = {"ID AVAL", "NOMBRE COMPLETO", "DNI"};
+		this.consulta = "SELECT a.id,a.nombres,a.apellidos, a.direccion FROM avales AS a WHERE "
+			+ "CONCAT(a.id,a.nombres,a.apellidos) LIKE ? LIMIT 20";
+		String[] titulos = {"ID AVAL", "NOMBRE COMPLETO", "Direccion"};
 		this.datos = new String[3];
 		this.tableModel = new DefaultTableModel(null, titulos) {
 			@Override
@@ -320,7 +320,7 @@ public class CreditosModel extends Conexion {
 			while (this.rs.next()) {
 				this.datos[0] = this.rs.getString("id");
 				this.datos[1] = this.rs.getString("nombres") + " " + this.rs.getString("apellidos");
-				this.datos[2] = this.rs.getString("dni");
+				this.datos[2] = this.rs.getString("direccion");
 				this.tableModel.addRow(datos);
 			}
 		} catch (Exception e) {

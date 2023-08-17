@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
  */
 public class Conexion {
 	private static String db = "tiendamegahogar";
-	private static String url = "jdbc:mysql://localhost/" + db;
+	private static String url = "jdbc:mysql://localhost/" + db + "?useSSL=false";
 	private static String user = "root";
 	private static String pass = "19199697tsoCD";
 	public Conexion(){
@@ -26,7 +26,7 @@ public class Conexion {
 		Connection link = null;
 		try {
 			//cargamos el Driver a 
-			Class.forName("org.gjt.mm.mysql.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			link = DriverManager.getConnection(url, user, pass);
 		} catch (Exception e) {

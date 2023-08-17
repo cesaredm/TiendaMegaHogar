@@ -99,6 +99,7 @@ public class MenuController implements MouseListener, KeyListener {
 			ProductosController.createInstanceController(menu, productosModel, kardex);
 			MarcasController.createInstanceController(menu, marcasModel);
 			PedidosController.createInstanciaController(menu, new PedidosModel());
+			PagosPedidosController.createInstnciaController(menu, new PagosPedidosModel());
 			this.menu.pnlOpcionInventario.setBackground(new java.awt.Color(28,31,37));
 			this.menu.pnlOpcionEmpleados.setBackground(new java.awt.Color(32,36,42));
 			this.menu.pnlOpcionUsuario.setBackground(new java.awt.Color(32,36,42));

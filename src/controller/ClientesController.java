@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import model.ClientesModel;
+import model.CmbAvales;
 import view.PrincipalView;
 
 /**
@@ -17,6 +18,7 @@ public final class ClientesController implements ActionListener, CaretListener {
 	PrincipalView menu;
 	ClientesModel clientesModel;
 	int id, filaseleccionada;
+	CmbAvales avales;
 
 	private ClientesController(PrincipalView menu, ClientesModel clientesModel) {
 		this.menu = menu;
@@ -133,7 +135,7 @@ public final class ClientesController implements ActionListener, CaretListener {
 
 	@Override
 	public void caretUpdate(CaretEvent e) {
-		if(e.getSource() == this.menu.txtBuscarCliente){
+		if (e.getSource() == this.menu.txtBuscarCliente) {
 			this.mostrar(this.menu.txtBuscarCliente.getText());
 		}
 	}

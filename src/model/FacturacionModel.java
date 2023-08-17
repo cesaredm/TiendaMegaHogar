@@ -14,6 +14,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
+
+
 /**
  *
  * @author CESAR DIAZ MARADIAGA
@@ -34,6 +36,7 @@ public class FacturacionModel extends Conexion {
 	public boolean validar;
 	public DefaultTableModel tableModel;
 	public DefaultComboBoxModel comboModel;
+	public DefaultComboBoxModel comboModelCreditos;
 
 	private String[] datos;
 	private String consulta;

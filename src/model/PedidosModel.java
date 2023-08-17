@@ -27,7 +27,6 @@ public class PedidosModel extends Conexion {
 	//atributos pedido
 	private int id, proveedor;
 	private Timestamp fecha;
-	private float total;
 	private String estado;
 	//atributos de detalle de pedido
 	private int pedido, producto, detalle;
@@ -59,14 +58,6 @@ public class PedidosModel extends Conexion {
 
 	public void setFecha(Timestamp fecha) {
 		this.fecha = fecha;
-	}
-
-	public float getTotal() {
-		return total;
-	}
-
-	public void setTotal(float total) {
-		this.total = total;
 	}
 
 	public String getEstado() {
@@ -129,8 +120,8 @@ public class PedidosModel extends Conexion {
 		if (this.proveedor == 0) {
 			this.validar = false;
 			JOptionPane.showMessageDialog(null, "Seleccione un proveedor.");
-		}else{
-			this.validar=true;
+		} else {
+			this.validar = true;
 		}
 	}
 
@@ -138,13 +129,12 @@ public class PedidosModel extends Conexion {
 		this.validarPedido();
 		if (this.validar) {
 			this.cn = conexion();
-			this.consulta = "INSERT INTO pedidos(proveedor,fecha,total,estado) VALUES(?,?,?,?)";
+			this.consulta = "INSERT INTO pedidos(proveedor,fecha,estado) VALUES(?,?,?)";
 			try {
 				this.pst = this.cn.prepareStatement(this.consulta, Statement.RETURN_GENERATED_KEYS);
 				this.pst.setInt(1, this.proveedor);
 				this.pst.setTimestamp(2, this.fecha);
-				this.pst.setFloat(3, this.total);
-				this.pst.setString(4, this.estado);
+				this.pst.setString(3, this.estado);
 				if (this.pst.executeUpdate() > 0) {
 					this.rs = this.pst.getGeneratedKeys();
 					if (this.rs.next()) {
@@ -176,6 +166,41 @@ public class PedidosModel extends Conexion {
 			this.pst.setFloat(5, this.importe);
 			this.pst.execute();
 		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(PedidosModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+	}
+
+	public void getDetallesPedido(int id){
+		this.consulta = "SELECT pp.id, pp.pedido, pp.producto, pr.descripcion, pp.cantidad,pp.precio, pp.importe FROM productoproveedor AS pp"
+			+ " INNER JOIN productos AS pr ON(pp.producto=pr.id) WHERE pp.pedido = ?";
+		this.cn = conexion();
+		String[] titulos = {"N. Detalle", "DESCRIPCION", "CANTIDAD", "PRECIO", "IMPORTE"};
+		this.datos = new String[5];
+		this.tableModel = new DefaultTableModel(null, titulos){
+			@Override
+			public boolean isCellEditable(int row, int col){
+				return false;
+			}
+		};
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setInt(1, id);
+			this.rs = this.pst.executeQuery();
+			while (this.rs.next()) {				
+				this.datos[0] = this.rs.getString("id");
+				this.datos[1] = this.rs.getString("descripcion");
+				this.datos[2] = this.rs.getString("cantidad");
+				this.datos[3] = this.rs.getString("precio");
+				this.datos[4] = this.rs.getString("importe");
+				this.tableModel.addRow(datos);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -253,9 +278,10 @@ public class PedidosModel extends Conexion {
 		}
 	}
 
-	public void getPedidos(){
+	public void getPedidos(String value) {
 		this.cn = conexion();
-		this.consulta = "SELECT p.id,pr.nombre,p.total,p.estado FROM pedidos AS p INNER JOIN proveedores AS pr ON(p.proveedor=pr.id)";
+		this.consulta = "SELECT pt.*, (total - (SELECT IFNULL(SUM(monto),0) FROM pagospedidos WHERE pedido=pt.id)) AS saldo FROM"
+			+ " pedidostienda AS pt WHERE CONCAT(pt.id, pt.nombre) LIKE ? ORDER BY nombre DESC";
 		this.datos = new String[4];
 		String[] titulos = {
 			"ID",
@@ -263,19 +289,20 @@ public class PedidosModel extends Conexion {
 			"TOTAL",
 			"ESTADO"
 		};
-		this.tableModel = new DefaultTableModel(null, titulos){
+		this.tableModel = new DefaultTableModel(null, titulos) {
 			@Override
-			public boolean isCellEditable(int row,int col){
+			public boolean isCellEditable(int row, int col) {
 				return false;
 			}
 		};
 		try {
 			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setString(1, "%"+value+"%");
 			this.rs = this.pst.executeQuery();
-			while (this.rs.next()) {				
+			while (this.rs.next()) {
 				this.datos[0] = this.rs.getString("id");
 				this.datos[1] = this.rs.getString("nombre");
-				this.datos[2] = this.formato.format(this.rs.getFloat("total"));
+				this.datos[2] = this.formato.format(this.rs.getFloat("saldo"));
 				this.datos[3] = this.rs.getString("estado");
 				this.tableModel.addRow(this.datos);
 			}
@@ -290,9 +317,14 @@ public class PedidosModel extends Conexion {
 		}
 	}
 
-	public void getPagosPorPedido(int id){
+	public void getPagosPorPedido(int id, String value) {
 		this.cn = conexion();
-		this.consulta = "SELECT pp.*,pr.nombre FROM pagospedidos AS pp INNER JOIN pedidos AS p ON(pp.pedido=p.id) INNER JOIN proveedores AS pr ON(p.proveedor=pr.id) WHERE p.id = ?";
+		if (id == 0) {
+			this.consulta = "SELECT pp.*, DATE_FORMAT(pp.fecha,'%d-%m-%Y, %r') AS f,pr.nombre FROM pagospedidos AS pp INNER JOIN pedidos AS p ON(pp.pedido=p.id) INNER JOIN proveedores AS pr ON(p.proveedor=pr.id) WHERE CONCAT(pr.nombre, DATE(pp.fecha)) LIKE ?";
+		} else if(id>0) {
+			this.consulta = "SELECT pp.*, DATE_FORMAT(pp.fecha,'%d-%m-%Y, %r') AS f,pr.nombre FROM pagospedidos AS pp INNER JOIN pedidos AS p ON(pp.pedido=p.id) INNER JOIN proveedores AS pr ON(p.proveedor=pr.id) WHERE p.id = ?";
+		}
+
 		this.datos = new String[4];
 		String[] titulos = {
 			"ID",
@@ -300,19 +332,23 @@ public class PedidosModel extends Conexion {
 			"MONTO",
 			"PROVEEDOR"
 		};
-		this.tableModel = new DefaultTableModel(null,titulos){
-			@Override 
-			public boolean isCellEditable(int row,int col){
+		this.tableModel = new DefaultTableModel(null, titulos) {
+			@Override
+			public boolean isCellEditable(int row, int col) {
 				return false;
 			}
 		};
 		try {
 			this.pst = this.cn.prepareStatement(this.consulta);
-			this.pst.setInt(1, id);
+			if (id > 0) {
+				this.pst.setInt(1, id);
+			} else {
+				this.pst.setString(1, "%"+value+"%");
+			} 
 			this.rs = this.pst.executeQuery();
-			while(this.rs.next()){
+			while (this.rs.next()) {
 				this.datos[0] = this.rs.getString("id");
-				this.datos[1] = this.rs.getString("fecha");
+				this.datos[1] = this.rs.getString("f");
 				this.datos[2] = this.rs.getString("monto");
 				this.datos[3] = this.rs.getString("nombre");
 				this.tableModel.addRow(this.datos);

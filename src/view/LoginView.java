@@ -5,17 +5,22 @@
  */
 package view;
 
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author CESAR DIAZ MARADIAGA
  */
 public class LoginView extends javax.swing.JFrame {
-
+	ImageIcon img;
 	/**
 	 * Creates new form LoginView
 	 */
 	public LoginView() {
 		initComponents();
+		this.setTitle("Tienda Mega Hogar");
+		img = new ImageIcon(this.getClass().getResource("/img/icono100.png"));
+		setIconImage(img.getImage());
 	}
 
 	/**

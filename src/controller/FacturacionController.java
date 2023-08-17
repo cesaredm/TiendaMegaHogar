@@ -20,6 +20,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.table.DefaultTableModel;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import model.CmbTipoVenta;
 import model.Procedures;
 
