@@ -25,6 +25,7 @@ public class Procedures extends Conexion {
 
 	}
 
+	/*esta funcion no se esta usando*/
 	public static boolean venderCodigoBarra(String codigo, float cantidad) {
 		cn = conexion();
 		try {
@@ -42,43 +43,51 @@ public class Procedures extends Conexion {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				cn.close();
-			} catch (SQLException ex) {
-				Logger.getLogger(Procedures.class.getName()).log(Level.SEVERE, null, ex);
+		} 
+		return response;
+	}
+
+	public static boolean venderId(int id, float cantidad, Connection cn) throws SQLException {
+		/* 
+			Recibe un id de producto la cantidad y una conexion para deminuir el stock en sincronia
+			con la transaccion de la funcion que lo llama
+		 */
+		pst = cn.prepareStatement("CALL venderId(?,?)");
+		pst.setInt(1, id);
+		pst.setFloat(2, cantidad);
+		rs = pst.executeQuery();
+		while (rs.next()) {
+			if (rs.getString("message").equals("exito")) {
+				response = true;
+			} else {
+				response = false;
+				JOptionPane.showMessageDialog(null, rs.getString("message"));
 			}
 		}
 		return response;
 	}
 
-	public static boolean venderId(int id, float cantidad) {
-		cn = conexion();
+	public static float verificarInventario(int id, String barras){
+		String consulta = "";		
+		float inventario = 0;
+		consulta = id == 0 ? "SELECT stock FROM productos WHERE codigoBarras = ?" : "SELECT stock FROM productos WHERE id = ?";
 		try {
-			pst = cn.prepareStatement("CALL venderId(?,?)");
-			pst.setInt(1, id);
-			pst.setFloat(2, cantidad);
+			cn = conexion();	
+			pst = cn.prepareStatement(consulta);
+			if (id==0) {
+				pst.setString(1,barras);
+			} else {
+				pst.setInt(1,id);
+			}
 			rs = pst.executeQuery();
-			while (rs.next()) {
-				if (rs.getString("message").equals("exito")) {
-					response = true;
-				} else {
-					response = false;
-					JOptionPane.showMessageDialog(null, rs.getString("message"));
-				}
+			if (rs.next()) {
+				inventario = rs.getFloat(1);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				cn.close();
-			} catch (SQLException ex) {
-				Logger.getLogger(Procedures.class.getName()).log(Level.SEVERE, null, ex);
-			}
+		} catch(SQLException err){
+			err.printStackTrace();
 		}
-		return response;
+		return inventario;
 	}
-
 	public static void agregarInventario(int producto, float cantidad) {
 		cn = conexion();
 		try {
@@ -112,7 +121,7 @@ public class Procedures extends Conexion {
 			saldo = deuda - pagos;
 			if (saldo == 0) {
 				consulta = "UPDATE creditos SET estado = 'Abierto' WHERE id = ?";
-			}else if(saldo > 0){
+			} else if (saldo > 0) {
 				consulta = "UPDATE creditos SET estado = 'Pendiente' WHERE id = ?";
 			}
 			pst = cn.prepareStatement(consulta);
@@ -128,6 +137,5 @@ public class Procedures extends Conexion {
 			}
 		}
 	}
-	
-	
+
 }

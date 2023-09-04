@@ -130,6 +130,9 @@ public class PrincipalView extends javax.swing.JFrame {
                 jdDetallesPedidos = new javax.swing.JDialog();
                 jScrollPane28 = new javax.swing.JScrollPane();
                 tblDetallesPedidos = new javax.swing.JTable();
+                jdDetalles = new javax.swing.JDialog();
+                jScrollPane29 = new javax.swing.JScrollPane();
+                tblDetalles = new javax.swing.JTable();
                 pnlMenuLateral = new javax.swing.JPanel();
                 jLabel1 = new javax.swing.JLabel();
                 jSeparator1 = new javax.swing.JSeparator();
@@ -1069,6 +1072,34 @@ public class PrincipalView extends javax.swing.JFrame {
                         .addComponent(jScrollPane28, javax.swing.GroupLayout.DEFAULT_SIZE, 311, Short.MAX_VALUE)
                 );
 
+                jdDetalles.setTitle("Detalles");
+
+                tblDetalles.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                tblDetalles.setModel(new javax.swing.table.DefaultTableModel(
+                        new Object [][] {
+                                {null, null, null, null},
+                                {null, null, null, null},
+                                {null, null, null, null},
+                                {null, null, null, null}
+                        },
+                        new String [] {
+                                "Title 1", "Title 2", "Title 3", "Title 4"
+                        }
+                ));
+                tblDetalles.setRowHeight(24);
+                jScrollPane29.setViewportView(tblDetalles);
+
+                javax.swing.GroupLayout jdDetallesLayout = new javax.swing.GroupLayout(jdDetalles.getContentPane());
+                jdDetalles.getContentPane().setLayout(jdDetallesLayout);
+                jdDetallesLayout.setHorizontalGroup(
+                        jdDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane29, javax.swing.GroupLayout.DEFAULT_SIZE, 1165, Short.MAX_VALUE)
+                );
+                jdDetallesLayout.setVerticalGroup(
+                        jdDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jScrollPane29, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
+                );
+
                 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
                 pnlMenuLateral.setBackground(new java.awt.Color(32, 36, 42));
@@ -1406,7 +1437,9 @@ public class PrincipalView extends javax.swing.JFrame {
                 cmbFormaPagoFacturacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 cmbFormaPagoFacturacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Tarjeta", "Pendiente" }));
 
+                btnAgregarCreditoFacturacion.setBackground(new java.awt.Color(0, 102, 255));
                 btnAgregarCreditoFacturacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnAgregarCreditoFacturacion.setForeground(new java.awt.Color(255, 255, 255));
                 btnAgregarCreditoFacturacion.setText("Cliente");
                 btnAgregarCreditoFacturacion.setActionCommand("btnAgregarCreditoFacturacion");
 
@@ -1512,23 +1545,33 @@ public class PrincipalView extends javax.swing.JFrame {
 
                 txtCodigoBarraFacturacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+                btnAgregarProductoFacturacion.setBackground(new java.awt.Color(0, 102, 255));
                 btnAgregarProductoFacturacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnAgregarProductoFacturacion.setForeground(new java.awt.Color(255, 255, 255));
                 btnAgregarProductoFacturacion.setText("Agregar[ENTER]");
                 btnAgregarProductoFacturacion.setActionCommand("btnAgregarProductoFacturacion");
 
+                btnLimpiarFacturacion.setBackground(new java.awt.Color(0, 102, 255));
                 btnLimpiarFacturacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnLimpiarFacturacion.setForeground(new java.awt.Color(255, 255, 255));
                 btnLimpiarFacturacion.setText("Limpiar");
                 btnLimpiarFacturacion.setActionCommand("btnLimpiarFacturacion");
 
+                btnEliminarArticuloFacturacion.setBackground(new java.awt.Color(0, 102, 255));
                 btnEliminarArticuloFacturacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnEliminarArticuloFacturacion.setForeground(new java.awt.Color(255, 255, 255));
                 btnEliminarArticuloFacturacion.setText("Eliminar Art.");
                 btnEliminarArticuloFacturacion.setActionCommand("btnEliminarArticuloFacturacion");
 
+                btnGuardarFacturacion.setBackground(new java.awt.Color(0, 102, 255));
                 btnGuardarFacturacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnGuardarFacturacion.setForeground(new java.awt.Color(255, 255, 255));
                 btnGuardarFacturacion.setText("Guardar[F8]");
                 btnGuardarFacturacion.setActionCommand("btnGuardarFacturacion");
 
+                btnGuardarImprimirFacturacion.setBackground(new java.awt.Color(0, 102, 255));
                 btnGuardarImprimirFacturacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnGuardarImprimirFacturacion.setForeground(new java.awt.Color(255, 255, 255));
                 btnGuardarImprimirFacturacion.setText("Guardar e imprimir[F9]");
                 btnGuardarImprimirFacturacion.setActionCommand("btnGuardarImprimirFacturacion");
 
@@ -1563,7 +1606,9 @@ public class PrincipalView extends javax.swing.JFrame {
                 lblTotalFactura.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 51)));
                 lblTotalFactura.setOpaque(true);
 
+                btnBuscarArticuloFacturacion.setBackground(new java.awt.Color(0, 102, 255));
                 btnBuscarArticuloFacturacion.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnBuscarArticuloFacturacion.setForeground(new java.awt.Color(255, 255, 255));
                 btnBuscarArticuloFacturacion.setText("Buscar Art. [F7]");
                 btnBuscarArticuloFacturacion.setActionCommand("btnBuscarArticuloFacturacion");
 
@@ -1691,19 +1736,19 @@ public class PrincipalView extends javax.swing.JFrame {
 
                 txtBuscarUsuario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-                btnLimpiarUsuario.setBackground(new java.awt.Color(102, 102, 255));
+                btnLimpiarUsuario.setBackground(new java.awt.Color(0, 102, 255));
                 btnLimpiarUsuario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 btnLimpiarUsuario.setForeground(new java.awt.Color(255, 255, 255));
                 btnLimpiarUsuario.setText("Limpiar");
                 btnLimpiarUsuario.setActionCommand("btnLimpiarUsuario");
 
-                btnGuardarUsuario.setBackground(new java.awt.Color(102, 102, 255));
+                btnGuardarUsuario.setBackground(new java.awt.Color(0, 102, 255));
                 btnGuardarUsuario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 btnGuardarUsuario.setForeground(new java.awt.Color(255, 255, 255));
                 btnGuardarUsuario.setText("Guardar");
                 btnGuardarUsuario.setActionCommand("btnGuardarUsuario");
 
-                btnActualizarUsuario.setBackground(new java.awt.Color(102, 102, 255));
+                btnActualizarUsuario.setBackground(new java.awt.Color(0, 102, 255));
                 btnActualizarUsuario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 btnActualizarUsuario.setForeground(new java.awt.Color(255, 255, 255));
                 btnActualizarUsuario.setText("Actualizar");
@@ -1878,11 +1923,15 @@ public class PrincipalView extends javax.swing.JFrame {
 
                 txtNombreMarca.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+                btnGuardarMarca.setBackground(new java.awt.Color(0, 102, 255));
                 btnGuardarMarca.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnGuardarMarca.setForeground(new java.awt.Color(255, 255, 255));
                 btnGuardarMarca.setText("Guardar");
                 btnGuardarMarca.setActionCommand("btnGuardarMarca");
 
+                btnActualizarMarca.setBackground(new java.awt.Color(0, 102, 255));
                 btnActualizarMarca.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnActualizarMarca.setForeground(new java.awt.Color(255, 255, 255));
                 btnActualizarMarca.setText("Actualizar");
                 btnActualizarMarca.setActionCommand("btnActualizarMarca");
 
@@ -2107,7 +2156,9 @@ public class PrincipalView extends javax.swing.JFrame {
                 ));
                 jScrollPane23.setViewportView(tblItemsPedidos);
 
+                btnProveedorPedido.setBackground(new java.awt.Color(0, 102, 255));
                 btnProveedorPedido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnProveedorPedido.setForeground(new java.awt.Color(255, 255, 255));
                 btnProveedorPedido.setText("Agregar proveedor");
                 btnProveedorPedido.setActionCommand("btnProveedorPedido");
 
@@ -2132,15 +2183,21 @@ public class PrincipalView extends javax.swing.JFrame {
                 cmbEstadoPedido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 cmbEstadoPedido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cancelado", "Pendiente" }));
 
+                btnGuardarPedido.setBackground(new java.awt.Color(0, 102, 255));
                 btnGuardarPedido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnGuardarPedido.setForeground(new java.awt.Color(255, 255, 255));
                 btnGuardarPedido.setText("Guardar");
                 btnGuardarPedido.setActionCommand("btnGuardarPedido");
 
+                btnEliminarArtPedido.setBackground(new java.awt.Color(0, 102, 255));
                 btnEliminarArtPedido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnEliminarArtPedido.setForeground(new java.awt.Color(255, 255, 255));
                 btnEliminarArtPedido.setText("Eliminar art");
                 btnEliminarArtPedido.setActionCommand("btnEliminarArtPedido");
 
+                btnLimpiarPedido.setBackground(new java.awt.Color(0, 102, 255));
                 btnLimpiarPedido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnLimpiarPedido.setForeground(new java.awt.Color(255, 255, 255));
                 btnLimpiarPedido.setText("Limpiar");
                 btnLimpiarPedido.setActionCommand("btnLimpiarPedido");
 
@@ -2314,7 +2371,9 @@ public class PrincipalView extends javax.swing.JFrame {
                 jsCantidadProductoPedidos.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 jsCantidadProductoPedidos.setModel(new javax.swing.SpinnerNumberModel(0.0f, 0.0f, null, 0.01f));
 
+                btnAgregarProductoApedido.setBackground(new java.awt.Color(0, 102, 255));
                 btnAgregarProductoApedido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnAgregarProductoApedido.setForeground(new java.awt.Color(255, 255, 255));
                 btnAgregarProductoApedido.setText("Agregar");
                 btnAgregarProductoApedido.setActionCommand("btnAgregarProductoApedido");
 
@@ -2775,15 +2834,21 @@ public class PrincipalView extends javax.swing.JFrame {
 
                 txtTelefonoCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+                btnLimpiarCliente.setBackground(new java.awt.Color(0, 102, 255));
                 btnLimpiarCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnLimpiarCliente.setForeground(new java.awt.Color(255, 255, 255));
                 btnLimpiarCliente.setText("Limpiar");
                 btnLimpiarCliente.setActionCommand("btnLimpiarCliente");
 
+                btnGuardarCliente.setBackground(new java.awt.Color(0, 102, 255));
                 btnGuardarCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnGuardarCliente.setForeground(new java.awt.Color(255, 255, 255));
                 btnGuardarCliente.setText("Guardar");
                 btnGuardarCliente.setActionCommand("btnGuardarCliente");
 
+                btnActualizarCliente.setBackground(new java.awt.Color(0, 102, 255));
                 btnActualizarCliente.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnActualizarCliente.setForeground(new java.awt.Color(255, 255, 255));
                 btnActualizarCliente.setText("Actualizar");
                 btnActualizarCliente.setActionCommand("btnActualizarCliente");
 
@@ -2931,7 +2996,9 @@ public class PrincipalView extends javax.swing.JFrame {
                 jsClienteCredito.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 jsClienteCredito.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
 
+                btnAddClienteCredito.setBackground(new java.awt.Color(0, 102, 255));
                 btnAddClienteCredito.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnAddClienteCredito.setForeground(new java.awt.Color(255, 255, 255));
                 btnAddClienteCredito.setText("add Cliente");
                 btnAddClienteCredito.setActionCommand("btnAddClienteCredito");
 
@@ -2940,7 +3007,9 @@ public class PrincipalView extends javax.swing.JFrame {
                 jLabel52.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 jLabel52.setText("Aval:");
 
+                btnAddAvalCredito.setBackground(new java.awt.Color(0, 102, 255));
                 btnAddAvalCredito.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnAddAvalCredito.setForeground(new java.awt.Color(255, 255, 255));
                 btnAddAvalCredito.setText("add Aval");
                 btnAddAvalCredito.setActionCommand("btnAddAvalCredito");
 
@@ -2957,15 +3026,21 @@ public class PrincipalView extends javax.swing.JFrame {
 
                 jcFechaCredito.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+                btnLimpiarCredito.setBackground(new java.awt.Color(0, 102, 255));
                 btnLimpiarCredito.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnLimpiarCredito.setForeground(new java.awt.Color(255, 255, 255));
                 btnLimpiarCredito.setText("Limpiar");
                 btnLimpiarCredito.setActionCommand("btnLimpiarCredito");
 
+                btnGuardarCredito.setBackground(new java.awt.Color(0, 102, 255));
                 btnGuardarCredito.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnGuardarCredito.setForeground(new java.awt.Color(255, 255, 255));
                 btnGuardarCredito.setText("Guardar");
                 btnGuardarCredito.setActionCommand("btnGuardarCredito");
 
+                btnActualizarCredito.setBackground(new java.awt.Color(0, 102, 255));
                 btnActualizarCredito.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnActualizarCredito.setForeground(new java.awt.Color(255, 255, 255));
                 btnActualizarCredito.setText("Actualizar");
                 btnActualizarCredito.setActionCommand("btnActualizarCredito");
 
@@ -3256,7 +3331,9 @@ public class PrincipalView extends javax.swing.JFrame {
                 jLabel71.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
                 jLabel71.setText("Fecha final:");
 
+                btnActualizarReporteDiario.setBackground(new java.awt.Color(0, 102, 255));
                 btnActualizarReporteDiario.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnActualizarReporteDiario.setForeground(new java.awt.Color(255, 255, 255));
                 btnActualizarReporteDiario.setText("Actualizar");
                 btnActualizarReporteDiario.setActionCommand("btnActualizarReporteDiario");
 
@@ -3335,7 +3412,9 @@ public class PrincipalView extends javax.swing.JFrame {
 
                 jcFechaFacturasEmitidas.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+                btnMostrarFacturasEmitidas.setBackground(new java.awt.Color(0, 102, 255));
                 btnMostrarFacturasEmitidas.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnMostrarFacturasEmitidas.setForeground(new java.awt.Color(255, 255, 255));
                 btnMostrarFacturasEmitidas.setText("Actualizar");
                 btnMostrarFacturasEmitidas.setActionCommand("btnMostrarFacturasEmitidas");
 
@@ -3383,7 +3462,7 @@ public class PrincipalView extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel74)
                                 .addGap(213, 213, 213)
-                                .addComponent(jLabel73)
+                                .addComponent(jLabel73, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jScrollPane18, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
                                 .addContainerGap())
@@ -3586,7 +3665,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 layout.setVerticalGroup(
                         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(pnlMenuLateral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pnlVistaPrincipal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(pnlVistaPrincipal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
                 );
 
                 pack();
@@ -3820,6 +3899,7 @@ public class PrincipalView extends javax.swing.JFrame {
         private javax.swing.JScrollPane jScrollPane26;
         private javax.swing.JScrollPane jScrollPane27;
         private javax.swing.JScrollPane jScrollPane28;
+        private javax.swing.JScrollPane jScrollPane29;
         private javax.swing.JScrollPane jScrollPane3;
         private javax.swing.JScrollPane jScrollPane4;
         private javax.swing.JScrollPane jScrollPane5;
@@ -3844,6 +3924,7 @@ public class PrincipalView extends javax.swing.JFrame {
         public javax.swing.JDialog jdAvalCreditos;
         public javax.swing.JDialog jdClienteCredito;
         public javax.swing.JDialog jdCreditoFacturacion;
+        public javax.swing.JDialog jdDetalles;
         public javax.swing.JDialog jdDetallesPedidos;
         public javax.swing.JDialog jdEmpleadosUsuarios;
         public javax.swing.JDialog jdHistorialCredito;
@@ -3931,6 +4012,7 @@ public class PrincipalView extends javax.swing.JFrame {
         public javax.swing.JTable tblCreditos;
         public javax.swing.JTable tblCreditosFacturacion;
         public javax.swing.JTable tblCreditosPendientes;
+        public javax.swing.JTable tblDetalles;
         public javax.swing.JTable tblDetallesPedidos;
         public javax.swing.JTable tblEmpleados;
         public javax.swing.JTable tblEmpleadosUsuario;

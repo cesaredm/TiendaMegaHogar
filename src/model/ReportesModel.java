@@ -114,7 +114,7 @@ public class ReportesModel extends Conexion {
 	}
 
 	public void getFacturas() {
-		this.consulta = "select f.id AS numeroFactura,dg.id as Ndato,dg.fecha,dg.comprador,tv.tipoventa,(select sum(d.importe) from detalles as d where dg.id=d.datos) as total from datosGenerales as dg inner join factura AS f on(dg.id=f.datos) inner join tipoVenta AS tv on(dg.tipoventa=tv.id) WHERE DATE(dg.fecha) = ?";
+		this.consulta = "SELECT * FROM facturastienda AS f WHERE DATE(f.fecha) = ?";
 		this.cn = conexion();
 		String[] titulos = {"N. FACTURA", "FECHA", "COMPRADOR", "TIPO VENTA", "TOTAL"};
 		String[] data = new String[5];
@@ -148,7 +148,7 @@ public class ReportesModel extends Conexion {
 	}
 
 	public void getComprobantes() {
-		this.consulta = "select c.id AS numeroComprobante,dg.id as Ndato,dg.fecha,dg.comprador,tv.tipoventa,(select sum(d.importe) from detalles as d where dg.id=d.datos) as total from datosGenerales as dg inner join comprobante AS c on(dg.id=c.datos) inner join tipoVenta AS tv on(dg.tipoventa=tv.id) WHERE DATE(dg.fecha) = ?";
+		this.consulta = "SELECT * FROM comprobantestienda AS c WHERE DATE(c.fecha) = ?";
 		this.cn = conexion();
 		String[] titulos = {"N. FACTURA", "FECHA", "COMPRADOR", "TIPO VENTA", "TOTAL"};
 		String[] data = new String[5];
@@ -179,5 +179,13 @@ public class ReportesModel extends Conexion {
 				Logger.getLogger(ReportesModel.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
+	}
+
+	public void getDetallesFacturas(int id){
+		
+	}
+
+	public void getDetallesComprobantes(int id){
+
 	}
 }

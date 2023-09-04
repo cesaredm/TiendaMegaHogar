@@ -7,6 +7,8 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
 import java.util.Date;
 import javax.swing.table.DefaultTableModel;
@@ -17,7 +19,7 @@ import view.PrincipalView;
  *
  * @author CESAR DIAZ MARADIAGA
  */
-public class ReportesController implements ActionListener {
+public class ReportesController implements ActionListener, MouseListener {
 
 	private static ReportesController instancia = null;
 	ReportesModel reportesModel;
@@ -36,6 +38,8 @@ public class ReportesController implements ActionListener {
 		this.menu.jcFechaFinalReporte.setDate(new Date());
 		this.menu.btnActualizarReporteDiario.addActionListener(this);
 		this.menu.btnMostrarFacturasEmitidas.addActionListener(this);
+		this.menu.tblReporteFacturas.addMouseListener(this);
+		this.menu.tblReportesComprobantes.addMouseListener(this);
 	}
 
 	static public void createInstanceController(PrincipalView menu, ReportesModel reportesModel) {
@@ -99,5 +103,35 @@ public class ReportesController implements ActionListener {
 			}
 			break;
 		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() ==  this.menu.tblReporteFacturas) {
+			if (e.getClickCount() == 2) {
+				int filaseleccionada = this.menu.tblReporteFacturas.getSelectedRow();
+				
+				this.menu.jdDetalles.setSize(1165, 433);
+				this.menu.jdDetalles.setLocationRelativeTo(null);
+				this.menu.setVisible(true);
+			}
+	
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
 	}
 }

@@ -8,13 +8,12 @@ package model;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
-
 
 /**
  *
@@ -27,6 +26,7 @@ public class FacturacionModel extends Conexion {
 	private int tipoVenta, empleado, credito, helper;
 	private float total;
 	private String comprador;
+	private String[][] detallesList;
 
 	/* ---------- DETALLES ---------- */
 	private int datoGeneral, producto;
@@ -147,11 +147,20 @@ public class FacturacionModel extends Conexion {
 		this.helper = helper;
 	}
 
+	public void setDetallesList(String[][] detallesList) {
+		this.detallesList = detallesList;
+	}
+
+	public String[][] getDetallesList() {
+		return this.detallesList;
+	}
+
 	public void guardarFactura() {
 		this.cn = conexion();
-		this.consulta = "INSERT INTO datosGenerales(fecha,tipoVenta,empleado,credito,total,comprador,helper) VALUES(?,?,?,?,?,?,?)";
+		this.consulta = "INSERT INTO datosGenerales(fecha,tipoVenta,empleado,credito,comprador,helper) VALUES(?,?,?,?,?,?)";
 		try {
-			this.pst = this.cn.prepareStatement(this.consulta);
+			this.cn.setAutoCommit(false);
+			this.pst = this.cn.prepareStatement(this.consulta, PreparedStatement.RETURN_GENERATED_KEYS);
 			this.pst.setTimestamp(1, this.fecha);
 			this.pst.setInt(2, this.tipoVenta);
 			this.pst.setInt(3, this.empleado);
@@ -160,41 +169,67 @@ public class FacturacionModel extends Conexion {
 			} else {
 				this.pst.setInt(4, this.credito);
 			}
-			this.pst.setFloat(5, this.total);
-			this.pst.setString(6, this.comprador);
-			this.pst.setInt(7, this.helper);
+			this.pst.setString(5, this.comprador);
+			this.pst.setInt(6, this.helper);
 			this.banderin = this.pst.executeUpdate();
 			if (this.banderin > 0) {
 				this.validar = true;
+				this.rs = this.pst.getGeneratedKeys();
+				if (this.rs.next()) {
+					this.datoGeneral = this.rs.getInt(1);
+					this.guardarDetalle();
+				}
 			} else {
 				this.validar = false;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
 			try {
-				this.cn.close();
+				this.cn.rollback();
+				e.printStackTrace();
 			} catch (SQLException ex) {
 				Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
 	}
 
+	public String mensaje = "";
+
 	public void guardarDetalle() {
-		this.cn = conexion();
+		/*
+			Se guardan los detalles con la misma conexion que se guarda la factura para utilizar la misma conexion
+			para envolver todo dentro de una transaccion de sql 
+		 */
 		this.consulta = "INSERT INTO detalles(datos,producto,precio,cantidad,importe) VALUES(?,?,?,?,?)";
 		try {
-			this.pst = this.cn.prepareStatement(this.consulta);
-			this.pst.setInt(1, this.datoGeneral);
-			this.pst.setInt(2, this.producto);
-			this.pst.setFloat(3, this.precio);
-			this.pst.setFloat(4, this.cantidad);
-			this.pst.setFloat(5, this.importe);
-			this.pst.executeUpdate();
+			for (String[] detalle : detallesList) {
+				this.pst = this.cn.prepareStatement(this.consulta);
+				this.pst.setInt(1, this.datoGeneral);
+				this.pst.setInt(2, Integer.parseInt(detalle[0]));
+				this.pst.setFloat(3, Float.parseFloat(detalle[1]));
+				this.pst.setFloat(4, Float.parseFloat(detalle[2]));
+				this.pst.setFloat(5, Float.parseFloat(detalle[3]));
+				this.pst.executeUpdate();
+				Procedures.venderId(Integer.parseInt(detalle[0]), Float.parseFloat(detalle[2]), this.cn);
+				if (!Procedures.response) {
+					/*
+						si al hacer las deducciones de inventario hay error hacemos el rollback y salimos
+						del recorrido de detalles	
+					 */
+					this.cn.rollback();
+					//this.mensaje = "Puede que uno de los productos agregados a la factura no tiene stock suficiente para la venta";
+					break;
+				}
+			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			try {
+				this.cn.rollback();
+				e.printStackTrace();
+			} catch (SQLException ex) {
+				Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		} finally {
 			try {
+				this.cn.commit();
 				this.cn.close();
 			} catch (SQLException ex) {
 				Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
@@ -203,67 +238,55 @@ public class FacturacionModel extends Conexion {
 	}
 
 	public void getProductoVender(String codigo) {
-		if (Procedures.venderCodigoBarra(codigo, 1)) {
-			this.cn = conexion();
-			this.consulta = "SELECT * FROM productos AS p"
-				+ " WHERE p.codigoBarra = ?";
+		this.cn = conexion();
+		this.consulta = "SELECT * FROM productos AS p"
+			+ " WHERE p.codigoBarra = ?";
 
-			this.getProducto = new String[6];
-			try {
-				this.pst = this.cn.prepareStatement(this.consulta);
-				this.pst.setString(1, codigo);
-				this.rs = this.pst.executeQuery();
-				while (this.rs.next()) {
-					this.getProducto[0] = this.rs.getString("id");
-					this.getProducto[1] = this.rs.getString("codigoBarra");
-					this.getProducto[2] = "1";
-					this.getProducto[3] = this.rs.getString("descripcion");
-					this.getProducto[4] = this.rs.getString("precioVenta");
-					this.getProducto[5] = this.rs.getString("precioVenta");
-				}
-			} catch (Exception e) {
-			} finally {
-				try {
-					this.cn.close();
-				} catch (SQLException ex) {
-					Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
-				}
+		this.getProducto = new String[6];
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setString(1, codigo);
+			this.rs = this.pst.executeQuery();
+			while (this.rs.next()) {
+				this.getProducto[0] = this.rs.getString("id");
+				this.getProducto[1] = this.rs.getString("codigoBarra");
+				this.getProducto[2] = "1";
+				this.getProducto[3] = this.rs.getString("descripcion");
+				this.getProducto[4] = this.rs.getString("precioVenta");
+				this.getProducto[5] = this.rs.getString("precioVenta");
 			}
-		} else {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
 	}
 
 	public void getProductoVender(int producto, float cantidad) {
-		if (Procedures.venderId(producto, cantidad)) {
-			this.cn = conexion();
-			this.consulta = "SELECT * FROM productos AS p"
-				+ " WHERE p.id = ?";
-			this.getProducto = new String[6];
-			try {
-				this.pst = this.cn.prepareStatement(this.consulta);
-				this.pst.setInt(1, producto);
-				this.rs = this.pst.executeQuery();
-				while (this.rs.next()) {
-					this.importe = cantidad * this.rs.getFloat("precioVenta");
-					this.getProducto[0] = this.rs.getString("id");
-					this.getProducto[1] = this.rs.getString("codigoBarra");
-					this.getProducto[2] = this.formato.format(cantidad);
-					this.getProducto[3] = this.rs.getString("descripcion");
-					this.getProducto[4] = this.rs.getString("precioVenta");
-					this.getProducto[5] = this.formato.format(this.importe);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					this.importe = 0;
-					this.cn.close();
-				} catch (SQLException ex) {
-					Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
-				}
+		this.cn = conexion();
+		this.consulta = "SELECT * FROM productos AS p"
+			+ " WHERE p.id = ?";
+		this.getProducto = new String[6];
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setInt(1, producto);
+			this.rs = this.pst.executeQuery();
+			while (this.rs.next()) {
+				this.importe = cantidad * this.rs.getFloat("precioVenta");
+				this.getProducto[0] = this.rs.getString("id");
+				this.getProducto[1] = this.rs.getString("codigoBarra");
+				this.getProducto[2] = this.formato.format(cantidad);
+				this.getProducto[3] = this.rs.getString("descripcion");
+				this.getProducto[4] = this.rs.getString("precioVenta");
+				this.getProducto[5] = this.formato.format(this.importe);
 			}
-		} else {
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.importe = 0;
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(FacturacionModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 	}
 
