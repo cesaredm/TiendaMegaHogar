@@ -79,8 +79,6 @@ public class PrincipalView extends javax.swing.JFrame {
                 jPanel10 = new javax.swing.JPanel();
                 jScrollPane7 = new javax.swing.JScrollPane();
                 tblOtrosMovimientosKardex = new javax.swing.JTable();
-                jLabel38 = new javax.swing.JLabel();
-                lblKardexInicial = new javax.swing.JLabel();
                 lblNombreProductoKardex = new javax.swing.JLabel();
                 jLabel41 = new javax.swing.JLabel();
                 lblEntradasKardex = new javax.swing.JLabel();
@@ -270,6 +268,8 @@ public class PrincipalView extends javax.swing.JFrame {
                 btnEliminarArtPedido = new javax.swing.JButton();
                 btnLimpiarPedido = new javax.swing.JButton();
                 jcFechaPedido = new com.toedter.calendar.JDateChooser();
+                txtNumeroFacturaPedido = new javax.swing.JTextField();
+                jLabel103 = new javax.swing.JLabel();
                 jTabbedPane5 = new javax.swing.JTabbedPane();
                 jPanel19 = new javax.swing.JPanel();
                 jsIdProductoPedido = new javax.swing.JSpinner();
@@ -458,7 +458,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 optKardexProducto.setActionCommand("optKardexProducto");
                 mnProductos.add(optKardexProducto);
 
-                optAgregarProducto.setText("Agregar inventario");
+                optAgregarProducto.setText("Crear movimiento");
                 optAgregarProducto.setActionCommand("optAgregarProducto");
                 mnProductos.add(optAgregarProducto);
 
@@ -621,14 +621,7 @@ public class PrincipalView extends javax.swing.JFrame {
                                 .addContainerGap())
                 );
 
-                jTabbedPane2.addTab("Otros movimientos", jPanel10);
-
-                jLabel38.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-                jLabel38.setText("Inventario inicial");
-
-                lblKardexInicial.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-                lblKardexInicial.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-                lblKardexInicial.setText("0.00");
+                jTabbedPane2.addTab("Entradas", jPanel10);
 
                 lblNombreProductoKardex.setBackground(new java.awt.Color(255, 102, 51));
                 lblNombreProductoKardex.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -666,12 +659,9 @@ public class PrincipalView extends javax.swing.JFrame {
                 jdKardexLayout.setHorizontalGroup(
                         jdKardexLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jTabbedPane2)
+                        .addComponent(lblNombreProductoKardex, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jdKardexLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(jdKardexLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel38, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lblKardexInicial, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(76, 76, 76)
                                 .addGroup(jdKardexLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(jLabel41, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(lblEntradasKardex, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -684,7 +674,6 @@ public class PrincipalView extends javax.swing.JFrame {
                                         .addComponent(jLabel44, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(lblInventarioActual, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addComponent(lblNombreProductoKardex, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 );
                 jdKardexLayout.setVerticalGroup(
                         jdKardexLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -692,10 +681,6 @@ public class PrincipalView extends javax.swing.JFrame {
                                 .addComponent(lblNombreProductoKardex, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jdKardexLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(jdKardexLayout.createSequentialGroup()
-                                                .addComponent(jLabel38)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(lblKardexInicial))
                                         .addGroup(jdKardexLayout.createSequentialGroup()
                                                 .addComponent(jLabel41)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -2268,7 +2253,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 jLabel94.setText("Estado:");
 
                 cmbEstadoPedido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-                cmbEstadoPedido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cancelado", "Pendiente" }));
+                cmbEstadoPedido.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pendiente", "Cancelado" }));
 
                 btnGuardarPedido.setBackground(new java.awt.Color(0, 102, 255));
                 btnGuardarPedido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -2292,6 +2277,11 @@ public class PrincipalView extends javax.swing.JFrame {
                 jcFechaPedido.setForeground(new java.awt.Color(204, 204, 204));
                 jcFechaPedido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+                txtNumeroFacturaPedido.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+                jLabel103.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                jLabel103.setText("Numero Factura:");
+
                 javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
                 jPanel17.setLayout(jPanel17Layout);
                 jPanel17Layout.setHorizontalGroup(
@@ -2306,27 +2296,35 @@ public class PrincipalView extends javax.swing.JFrame {
                                                 .addGap(18, 18, 18)
                                                 .addComponent(lblTotalPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGroup(jPanel17Layout.createSequentialGroup()
-                                                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(jPanel17Layout.createSequentialGroup()
+                                                                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(jcFechaPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                        .addComponent(cmbEstadoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                                                         .addGroup(jPanel17Layout.createSequentialGroup()
                                                                 .addComponent(jLabel94)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(cmbEstadoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(btnGuardarPedido)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(btnEliminarArtPedido))
+                                                                .addGap(87, 87, 87)))
+                                                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                         .addGroup(jPanel17Layout.createSequentialGroup()
-                                                                .addComponent(jcFechaPedido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(btnProveedorPedido)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(lblNombreProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addComponent(lblNombreProveedor, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(lblIdProveedor)
-                                                                .addGap(43, 43, 43)))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(btnLimpiarPedido)
-                                                .addGap(55, 55, 55)))
+                                                                .addGap(179, 179, 179))
+                                                        .addGroup(jPanel17Layout.createSequentialGroup()
+                                                                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                        .addComponent(jLabel103)
+                                                                        .addGroup(jPanel17Layout.createSequentialGroup()
+                                                                                .addComponent(txtNumeroFacturaPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                .addComponent(btnGuardarPedido)
+                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                .addComponent(btnEliminarArtPedido)
+                                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                                .addComponent(btnLimpiarPedido)))
+                                                                .addGap(0, 0, Short.MAX_VALUE)))))
                                 .addContainerGap())
                 );
                 jPanel17Layout.setVerticalGroup(
@@ -2340,9 +2338,13 @@ public class PrincipalView extends javax.swing.JFrame {
                                                 .addComponent(lblNombreProveedor)
                                                 .addComponent(lblIdProveedor)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel94)
+                                        .addComponent(jLabel103))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(cmbEstadoPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtNumeroFacturaPedido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(btnGuardarPedido)
                                         .addComponent(btnEliminarArtPedido)
                                         .addComponent(btnLimpiarPedido))
@@ -2352,7 +2354,7 @@ public class PrincipalView extends javax.swing.JFrame {
                                 .addGroup(jPanel17Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(lblTotalPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel93, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap())
+                                .addGap(9, 9, 9))
                 );
 
                 jTabbedPane5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -3752,7 +3754,7 @@ public class PrincipalView extends javax.swing.JFrame {
                 layout.setVerticalGroup(
                         layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(pnlMenuLateral, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pnlVistaPrincipal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(pnlVistaPrincipal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 );
 
                 pack();
@@ -3852,6 +3854,7 @@ public class PrincipalView extends javax.swing.JFrame {
         private javax.swing.JLabel jLabel100;
         private javax.swing.JLabel jLabel101;
         private javax.swing.JLabel jLabel102;
+        private javax.swing.JLabel jLabel103;
         private javax.swing.JLabel jLabel11;
         private javax.swing.JLabel jLabel12;
         private javax.swing.JLabel jLabel13;
@@ -3881,7 +3884,6 @@ public class PrincipalView extends javax.swing.JFrame {
         private javax.swing.JLabel jLabel35;
         private javax.swing.JLabel jLabel36;
         private javax.swing.JLabel jLabel37;
-        private javax.swing.JLabel jLabel38;
         private javax.swing.JLabel jLabel39;
         private javax.swing.JLabel jLabel4;
         private javax.swing.JLabel jLabel40;
@@ -4048,7 +4050,6 @@ public class PrincipalView extends javax.swing.JFrame {
         public javax.swing.JLabel lblIdPedido;
         public javax.swing.JLabel lblIdProveedor;
         public javax.swing.JLabel lblInventarioActual;
-        public javax.swing.JLabel lblKardexInicial;
         public javax.swing.JLabel lblNombreProductoKardex;
         public javax.swing.JLabel lblNombreProveedor;
         public javax.swing.JLabel lblNumeroDatoGeneral;
@@ -4176,6 +4177,7 @@ public class PrincipalView extends javax.swing.JFrame {
         public javax.swing.JTextField txtNombresCliente;
         public javax.swing.JTextField txtNombresEmpleado;
         public javax.swing.JTextField txtNumeroFactura;
+        public javax.swing.JTextField txtNumeroFacturaPedido;
         public javax.swing.JTextField txtPasswordUsuario;
         public javax.swing.JTextField txtTelefonoCliente;
         public javax.swing.JTextField txtTelefonoEmpleado;

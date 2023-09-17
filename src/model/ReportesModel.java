@@ -8,6 +8,7 @@ package model;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -226,7 +227,10 @@ public class ReportesModel extends Conexion {
 			this.pst.setInt(1, detalle);
 			this.pst.setFloat(2, importe);
 			this.pst.setFloat(3, cantidad);
-			this.pst.execute();
+			this.rs = this.pst.executeQuery();
+			if (this.rs.next()) {
+				JOptionPane.showMessageDialog(null, this.rs.getString(1));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

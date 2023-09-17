@@ -9,6 +9,7 @@ import controller.MenuController;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -105,7 +106,14 @@ public class KardexModel extends Conexion {
 			this.pst.setString(3, this.tipoMovimiento);
 			this.pst.setString(4, this.nota);
 			this.pst.setInt(5, MenuController.empleadoSistema);
-			this.pst.execute();
+			this.rs = this.pst.executeQuery();
+			if (this.rs.next()) {
+				if (this.rs.getString(1).equals("exito")) {
+					JOptionPane.showMessageDialog(null, "Movimiento creado con exito.");
+				}else{
+					JOptionPane.showMessageDialog(null, "Oops. ocurrio un error al intentar crear el movimiento");
+				}
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -138,7 +146,7 @@ public class KardexModel extends Conexion {
 		return id;
 	}
 
-	public void entradasSalidasInicial(int producto) {
+	public void getSumaMovimientosKardex(int producto) {
 		this.cn = conexion();
 		this.consulta = "CALL kardex(?)";
 		try {
@@ -146,7 +154,6 @@ public class KardexModel extends Conexion {
 			this.pst.setInt(1, producto);
 			this.rs = this.pst.executeQuery();
 			while (this.rs.next()) {
-				this.inventarioInicial = this.rs.getFloat("inventarioInicial");
 				this.entradas = this.rs.getFloat("entradas");
 				this.salidas = this.rs.getFloat("salidas");
 			}
@@ -163,10 +170,10 @@ public class KardexModel extends Conexion {
 
 	public void salidas(int producto) {
 		this.cn = conexion();
-		this.consulta = "SELECT p.codigoBarra,p.descripcion,d.cantidad,f.id,DATE_FORMAT(f.fecha,'%d-%M-%y %r') AS fecha FROM detalles AS d"
-			+ " INNER JOIN productos AS p ON(d.producto=p.id) INNER JOIN facturas AS f ON(d.factura=f.id) WHERE p.id = ?";
+		this.consulta = "SELECT k.cantidad,k.tipoMovimiento,DATE_FORMAT(k.fecha,'%d-%M-%y %r') AS fecha,k.nota, e.nombres,e.apellidos"
+			+ " FROM kardex AS k INNER JOIN empleados AS e ON(k.empleado = e.id) WHERE k.producto = ? AND k.tipoMovimiento = ? ";
 		this.datos = new String[5];
-		String[] titulos = {"COD. BARRA", "DESCRIPCION", "CANTIDAD", "FACTURA", "FECHA"};
+		String[] titulos = {"CANTIDAD","TIPO MOV.", "NOTA", "FECHA","EMPLEADO"};
 		this.tableModel = new DefaultTableModel(null, titulos) {
 			@Override
 			public boolean isCellEditable(int row, int col) {
@@ -174,17 +181,16 @@ public class KardexModel extends Conexion {
 			}
 		};
 		try {
-			this.st = this.cn.createStatement();
-			this.st.execute("SET lc_time_names = 'es_ES'");
 			this.pst = this.cn.prepareStatement(this.consulta);
-			this.pst.setInt(1, producto);
+			this.pst.setInt(1,producto);
+			this.pst.setString(2, "Salida");
 			this.rs = this.pst.executeQuery();
 			while (this.rs.next()) {
-				this.datos[0] = this.rs.getString("codigoBarra");
-				this.datos[1] = this.rs.getString("descripcion");
-				this.datos[2] = this.rs.getString("cantidad");
-				this.datos[3] = this.rs.getString("id");
-				this.datos[4] = this.rs.getString("fecha");
+				this.datos[0] = this.rs.getString("cantidad");
+				this.datos[1] = this.rs.getString("tipoMovimiento");
+				this.datos[2] = this.rs.getString("nota");
+				this.datos[3] = this.rs.getString("fecha");
+				this.datos[4] = this.rs.getString("nombres") + " " + this.rs.getString("apellidos");
 				this.tableModel.addRow(datos);
 			}
 		} catch (Exception e) {
@@ -198,12 +204,12 @@ public class KardexModel extends Conexion {
 		}
 	}
 
-	public void otrosMovimientos(int producto) {
+	public void getEntradas(int producto) {
 		this.cn = conexion();
-		this.consulta = "SELECT p.codigoBarra,p.descripcion,k.cantidad,k.accion,DATE_FORMAT(k.fecha,'%d-%M-%y %r') AS fecha FROM kardex AS k"
-			+ " INNER JOIN productos AS p ON(k.producto=p.id) WHERE p.id = ? AND k.accion != 'Inicial'";
+		this.consulta = "SELECT k.cantidad,k.tipoMovimiento,DATE_FORMAT(k.fecha,'%d-%M-%y %r') AS fecha,k.nota, e.nombres, e.apellidos "
+			+ "FROM kardex AS k INNER JOIN empleados e ON(k.empleado=e.id) WHERE k.producto = ? AND k.tipoMovimiento = ?";
 		this.datos = new String[5];
-		String[] titulos = {"COD. BARRA", "DESCRIPCION", "CANTIDAD", "ACCCION", "FECHA"};
+		String[] titulos = {"CANTIDAD", "TIPO MOV.", "NOTA", "FECHA", "EMPLEADO"};
 		this.tableModel = new DefaultTableModel(null, titulos) {
 			@Override
 			public boolean isCellEditable(int row, int col) {
@@ -215,13 +221,14 @@ public class KardexModel extends Conexion {
 			this.st.execute("SET lc_time_names = 'es_ES'");
 			this.pst = this.cn.prepareStatement(this.consulta);
 			this.pst.setInt(1, producto);
+			this.pst.setString(2, "Entrada");
 			this.rs = this.pst.executeQuery();
 			while (this.rs.next()) {
-				this.datos[0] = this.rs.getString("codigoBarra");
-				this.datos[1] = this.rs.getString("descripcion");
-				this.datos[2] = this.rs.getString("cantidad");
-				this.datos[3] = this.rs.getString("accion");
-				this.datos[4] = this.rs.getString("fecha");
+				this.datos[0] = this.rs.getString("cantidad");
+				this.datos[1] = this.rs.getString("tipoMovimiento");
+				this.datos[2] = this.rs.getString("nota");
+				this.datos[3] = this.rs.getString("fecha");
+				this.datos[4] = this.rs.getString("nombres") + " " + this.rs.getString("apellidos");
 				this.tableModel.addRow(datos);
 			}
 		} catch (Exception e) {

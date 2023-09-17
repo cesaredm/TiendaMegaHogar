@@ -163,6 +163,7 @@ public class PedidosController implements ActionListener, CaretListener, MouseLi
 				this.pedidosModel.setProveedor(this.proveedor);
 				this.pedidosModel.setFecha(new java.sql.Timestamp(this.fecha.getTime()));
 				this.pedidosModel.setEstado(this.menu.cmbEstadoPedido.getSelectedItem().toString());
+				this.pedidosModel.setNumeroFactura(this.menu.txtNumeroFacturaPedido.getText());
 				this.pedidosModel.guardarPedido();
 				if (pedidosModel.idInsertado > 0) {
 					this.guardarDetallePedido();

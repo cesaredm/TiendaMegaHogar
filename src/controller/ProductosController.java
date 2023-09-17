@@ -155,6 +155,11 @@ public class ProductosController implements ActionListener, CaretListener {
 		this.menu.tblProductos.setModel(this.productosModel.tableModelProductos);
 	}
 
+	public void limpiarFormKardex(){
+		this.menu.txtAreaNotaMovimientoKardex.setText("");
+		this.menu.jsCantidadMovimientoKardex.setValue(0);
+	}
+
 	public void crearMovimientoKardex() {
 		this.kardex.setTipoMovimiento(this.menu.cmbTipoMovimientoKardex.getSelectedItem().toString());
 		this.kardex.setCantidad(Float.parseFloat(this.menu.jsCantidadMovimientoKardex.getValue().toString()));
@@ -163,13 +168,14 @@ public class ProductosController implements ActionListener, CaretListener {
 		this.kardex.guardar();
 		this.menu.jdMovKardex.setVisible(false);
 		this.mostrar("");
+		this.limpiarFormKardex();
 	}
 
 	public void agregarProductoInventario() {
 		this.filaseleccionada = this.menu.tblProductos.getSelectedRow();
 		if (this.filaseleccionada != -1) {
 			this.id = Integer.parseInt(this.menu.tblProductos.getValueAt(this.filaseleccionada, 0).toString());
-			this.menu.jdMovKardex.setSize(400, 330);
+			this.menu.jdMovKardex.setSize(400, 340);
 			this.menu.jdMovKardex.setLocationRelativeTo(null);
 			this.menu.jdMovKardex.setVisible(true);
 		}
@@ -190,18 +196,23 @@ public class ProductosController implements ActionListener, CaretListener {
 	public void mostrarKardex() {
 		this.filaseleccionada = this.menu.tblProductos.getSelectedRow();
 		if (this.filaseleccionada != -1) {
+			/* Estilo de cabeceras de las tablas */
 			EstiloTablas.estilosCabeceras(this.menu.tblSalidasKardex);
 			EstiloTablas.estilosCabeceras(this.menu.tblOtrosMovimientosKardex);
+			/* Id de producto */ 
 			this.id = Integer.parseInt(this.menu.tblProductos.getValueAt(this.filaseleccionada, 0).toString());
+			/* Obtengo el inventario actual desde la tabla prodcuto */
 			this.menu.lblInventarioActual.setText((String) this.menu.tblProductos.getValueAt(this.filaseleccionada, 7));
 			this.menu.lblNombreProductoKardex.setText((String) this.menu.tblProductos.getValueAt(this.filaseleccionada, 2));
-			this.kardex.entradasSalidasInicial(this.id);
+			this.kardex.getSumaMovimientosKardex(this.id);
+			/* obtengo lista de salidas */
 			this.kardex.salidas(this.id);
+			this.menu.tblSalidasKardex.setModel(this.kardex.tableModel);
 			this.menu.lblEntradasKardex.setText(this.numberFormat.format(this.kardex.getEntradas()));
 			this.menu.lblSalidasKardex.setText(this.numberFormat.format(this.kardex.getSalidas()));
-			this.menu.lblKardexInicial.setText(this.numberFormat.format(this.kardex.getInventarioInicial()));
-			this.menu.tblSalidasKardex.setModel(this.kardex.tableModel);
-			this.kardex.otrosMovimientos(this.id);
+			//this.menu.lblKardexInicial.setText(this.numberFormat.format(this.kardex.getInventarioInicial()));
+			/* obtengo lista de entradas */
+			this.kardex.getEntradas(this.id);
 			this.menu.tblOtrosMovimientosKardex.setModel(this.kardex.tableModel);
 			this.menu.jdKardex.setSize(1108, 473);
 			this.menu.jdKardex.setLocationRelativeTo(null);

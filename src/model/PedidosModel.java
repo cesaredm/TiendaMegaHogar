@@ -28,6 +28,7 @@ public class PedidosModel extends Conexion {
 	private int id, proveedor;
 	private Timestamp fecha;
 	private String estado;
+	private String numeroFactura;
 	//atributos de detalle de pedido
 	private int pedido, producto, detalle;
 	private float precio, cantidad, importe;
@@ -62,6 +63,14 @@ public class PedidosModel extends Conexion {
 
 	public String getEstado() {
 		return estado;
+	}
+
+	public String getNumeroFactura() {
+		return numeroFactura;
+	}
+
+	public void setNumeroFactura(String numeroFactura) {
+		this.numeroFactura = numeroFactura;
 	}
 
 	public void setEstado(String estado) {
@@ -129,12 +138,13 @@ public class PedidosModel extends Conexion {
 		this.validarPedido();
 		if (this.validar) {
 			this.cn = conexion();
-			this.consulta = "INSERT INTO pedidos(proveedor,fecha,estado) VALUES(?,?,?)";
+			this.consulta = "INSERT INTO pedidos(proveedor,fecha,estado, numeroFactura) VALUES(?,?,?,?)";
 			try {
 				this.pst = this.cn.prepareStatement(this.consulta, Statement.RETURN_GENERATED_KEYS);
 				this.pst.setInt(1, this.proveedor);
 				this.pst.setTimestamp(2, this.fecha);
 				this.pst.setString(3, this.estado);
+				this.pst.setString(4, this.numeroFactura);
 				if (this.pst.executeUpdate() > 0) {
 					this.rs = this.pst.getGeneratedKeys();
 					if (this.rs.next()) {
@@ -282,10 +292,11 @@ public class PedidosModel extends Conexion {
 		this.cn = conexion();
 		this.consulta = "SELECT pt.*, (total - (SELECT IFNULL(SUM(monto),0) FROM pagospedidos WHERE pedido=pt.id)) AS saldo FROM"
 			+ " pedidostienda AS pt WHERE CONCAT(pt.id, pt.nombre) LIKE ? ORDER BY nombre DESC";
-		this.datos = new String[4];
+		this.datos = new String[5];
 		String[] titulos = {
 			"ID",
 			"PROVEEDOR",
+			"N. FACTURA",
 			"TOTAL",
 			"ESTADO"
 		};
@@ -302,8 +313,9 @@ public class PedidosModel extends Conexion {
 			while (this.rs.next()) {
 				this.datos[0] = this.rs.getString("id");
 				this.datos[1] = this.rs.getString("nombre");
-				this.datos[2] = this.formato.format(this.rs.getFloat("saldo"));
-				this.datos[3] = this.rs.getString("estado");
+				this.datos[2] = this.rs.getString("numeroFactura");
+				this.datos[3] = this.formato.format(this.rs.getFloat("saldo"));
+				this.datos[4] = this.rs.getString("estado");
 				this.tableModel.addRow(this.datos);
 			}
 		} catch (Exception e) {

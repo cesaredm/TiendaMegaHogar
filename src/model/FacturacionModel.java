@@ -200,6 +200,7 @@ public class FacturacionModel extends Conexion {
 			para envolver todo dentro de una transaccion de sql 
 		 */
 		this.consulta = "INSERT INTO detalles(datos,producto,precio,cantidad,importe) VALUES(?,?,?,?,?)";
+		String consulta2 = "INSERT INTO kardex(producto, cantidad, tipoMovimiento, nota, empleado) VALUES(?,?,?,?,?)";
 		try {
 			for (String[] detalle : detallesList) {
 				this.pst = this.cn.prepareStatement(this.consulta);
@@ -209,6 +210,13 @@ public class FacturacionModel extends Conexion {
 				this.pst.setFloat(4, Float.parseFloat(detalle[2]));
 				this.pst.setFloat(5, Float.parseFloat(detalle[3]));
 				this.pst.executeUpdate();
+				this.pst = this.cn.prepareStatement(consulta2);
+				this.pst.setInt(1, Integer.parseInt(detalle[0]));
+				this.pst.setFloat(2, Float.parseFloat(detalle[2]));
+				this.pst.setString(3, "Salida");
+				this.pst.setString(4, "Por venta");
+				this.pst.setInt(5, this.empleado);
+				this.pst.execute();
 				Procedures.venderId(Integer.parseInt(detalle[0]), Float.parseFloat(detalle[2]), this.cn);
 				if (!Procedures.response) {
 					/*
