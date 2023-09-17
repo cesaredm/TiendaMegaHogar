@@ -51,6 +51,7 @@ public class ProductosController implements ActionListener, CaretListener {
 		this.menu.btnAgregarMarca.addActionListener(this);
 		this.menu.btnGuardarProducto.addActionListener(this);
 		this.menu.btnLimpiarProdducto.addActionListener(this);
+		this.menu.btnGuardarMovimientoKardex.addActionListener(this);
 		this.menu.optEditarProducto.addActionListener(this);
 		this.menu.optEliminarProducto.addActionListener(this);
 		this.menu.btnActualizarProducto.addActionListener(this);
@@ -82,6 +83,7 @@ public class ProductosController implements ActionListener, CaretListener {
 			this.menu.jsCantidadProducto.setValue(0.00);
 			this.menu.btnActualizarProducto.setEnabled(false);
 			this.menu.btnGuardarProducto.setEnabled(true);
+			this.menu.jsCantidadProducto.setEnabled(true);
 		}
 	}
 
@@ -95,7 +97,6 @@ public class ProductosController implements ActionListener, CaretListener {
 		this.productosModel.setPrecioVenta((float) this.menu.jsPrecioVentaProducto.getValue());
 		this.productosModel.setStock((float) this.menu.jsCantidadProducto.getValue());
 		this.productosModel.guardar();
-		this.guardarKardex(this.productosModel.validar, this.kardex.getLastProducto(), this.productosModel.getStock(), "Inicial");
 		this.limpiar(this.productosModel.validar);
 		this.mostrar("");
 	}
@@ -114,6 +115,7 @@ public class ProductosController implements ActionListener, CaretListener {
 			this.menu.jsCantidadProducto.setValue(this.productosModel.getStock());
 			this.menu.btnGuardarProducto.setEnabled(false);
 			this.menu.btnActualizarProducto.setEnabled(true);
+			this.menu.jsCantidadProducto.setEnabled(false);
 		}
 	}
 
@@ -127,7 +129,6 @@ public class ProductosController implements ActionListener, CaretListener {
 		this.productosModel.setPrecioVenta((float) this.menu.jsPrecioVentaProducto.getValue());
 		this.productosModel.setStock((float) this.menu.jsCantidadProducto.getValue());
 		this.productosModel.actualizar();
-		this.guardarKardex(this.productosModel.validar, this.productosModel.getId(), this.productosModel.getStock(), "Actualización");
 		this.limpiar(this.productosModel.validar);
 		this.mostrar("");
 	}
@@ -154,22 +155,27 @@ public class ProductosController implements ActionListener, CaretListener {
 		this.menu.tblProductos.setModel(this.productosModel.tableModelProductos);
 	}
 
+	public void crearMovimientoKardex() {
+		this.kardex.setTipoMovimiento(this.menu.cmbTipoMovimientoKardex.getSelectedItem().toString());
+		this.kardex.setCantidad(Float.parseFloat(this.menu.jsCantidadMovimientoKardex.getValue().toString()));
+		this.kardex.setNota(this.menu.txtAreaNotaMovimientoKardex.getText());
+		this.kardex.setProducto(this.id);
+		this.kardex.guardar();
+		this.menu.jdMovKardex.setVisible(false);
+		this.mostrar("");
+	}
+
 	public void agregarProductoInventario() {
 		this.filaseleccionada = this.menu.tblProductos.getSelectedRow();
 		if (this.filaseleccionada != -1) {
 			this.id = Integer.parseInt(this.menu.tblProductos.getValueAt(this.filaseleccionada, 0).toString());
-			JOptionPane.showMessageDialog(null, this.spiner, "Agregar inventario", JOptionPane.INFORMATION_MESSAGE);
-			this.cantidadAgregar = Float.parseFloat(this.spiner.getValue().toString());
-			if (this.cantidadAgregar > 0) {
-				this.productosModel.setId(this.id);
-				this.productosModel.agregarInventario(this.cantidadAgregar);
-				this.guardarKardex(true, this.id, this.cantidadAgregar, "Agrego");
-				this.mostrar("");
-			}
+			this.menu.jdMovKardex.setSize(400, 330);
+			this.menu.jdMovKardex.setLocationRelativeTo(null);
+			this.menu.jdMovKardex.setVisible(true);
 		}
 	}
 
-	public void guardarKardex(boolean confirmacion, int producto, float cantidad, String accion) {
+	/*public void guardarKardex(boolean confirmacion, int producto, float cantidad, String accion) {
 		if (confirmacion) {
 			long fecha = new Date().getTime();
 			this.kardex.setProducto(producto);
@@ -179,7 +185,7 @@ public class ProductosController implements ActionListener, CaretListener {
 			this.kardex.setEmpleado(MenuController.empleadoSistema);
 			this.kardex.guardar();
 		}
-	}
+	}*/
 
 	public void mostrarKardex() {
 		this.filaseleccionada = this.menu.tblProductos.getSelectedRow();
@@ -213,6 +219,10 @@ public class ProductosController implements ActionListener, CaretListener {
 			break;
 			case "btnGuardarProducto": {
 				this.guardar();
+			}
+			break;
+			case "btnGuardarMovimientoKardex":{
+				crearMovimientoKardex();
 			}
 			break;
 			case "btnLimpiarProducto": {

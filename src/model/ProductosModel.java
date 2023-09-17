@@ -5,13 +5,13 @@
  */
 package model;
 
+import controller.MenuController;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
 
 /**
  *
@@ -128,8 +128,10 @@ public class ProductosModel extends Conexion {
 			this.cn = conexion();
 			this.consulta = "INSERT INTO productos(descripcion,codigoBarra,modelo,marca,precioCosto,precioVenta,stock)"
 				+ " VALUES(?,?,?,?,?,?,?)";
+			String kardex = "INSERT INTO kardex(producto, cantidad, tipoMovimiento,nota, empleado) VALUES(?,?,?,?,?)";
 			try {
-				this.pst = this.cn.prepareStatement(this.consulta);
+				this.cn.setAutoCommit(false);
+				this.pst = this.cn.prepareStatement(this.consulta, PreparedStatement.RETURN_GENERATED_KEYS);
 				this.pst.setString(1, this.descripcion);
 				this.pst.setString(2, this.codigoBarra);
 				this.pst.setString(3, this.modelo);
@@ -139,11 +141,28 @@ public class ProductosModel extends Conexion {
 				this.pst.setFloat(7, this.stock);
 				this.banderin = this.pst.executeUpdate();
 				if (this.banderin > 0) {
-					JOptionPane.showMessageDialog(null, "Producto " + this.descripcion + " guardado con esxito.");
+					this.rs = this.pst.getGeneratedKeys();
+					if (this.rs.next()) {
+						this.pst = this.cn.prepareStatement(kardex);
+						this.pst.setInt(1, this.rs.getInt(1));
+						this.pst.setFloat(2, this.stock);
+						this.pst.setString(3, "Entrada");
+						this.pst.setString(4, "Inventario inicial");
+						this.pst.setInt(5, MenuController.empleadoSistema);
+						if (this.pst.executeUpdate() > 0) {
+							JOptionPane.showMessageDialog(null, "Producto " + this.descripcion + " guardado con exito.");
+							this.cn.commit();
+						}
+					}
 				}
 			} catch (SQLException e) {
-				JOptionPane.showMessageDialog(null, "Oops.. error al intentar guardar producto. -> " + e);
-				e.printStackTrace();
+				try {
+					this.cn.rollback();
+					JOptionPane.showMessageDialog(null, "Oops.. error al intentar guardar producto. -> " + e);
+					e.printStackTrace();
+				} catch (Exception err) {
+					e.printStackTrace();
+				}
 			} finally {
 				try {
 					this.cn.close();
@@ -222,13 +241,13 @@ public class ProductosModel extends Conexion {
 			this.pst = this.cn.prepareStatement(this.consulta);
 			this.pst.setInt(1, this.id);
 			this.banderin = this.pst.executeUpdate();
-			if(this.banderin > 0){
+			if (this.banderin > 0) {
 				JOptionPane.showMessageDialog(null, "Producto eliminado con exito.");
 			}
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null, "Oops.. error al intentar eliminar producto. -> "+ e);
+			JOptionPane.showMessageDialog(null, "Oops.. error al intentar eliminar producto. -> " + e);
 			e.printStackTrace();
-		}finally{
+		} finally {
 			try {
 				this.cn.close();
 			} catch (SQLException ex) {
@@ -296,7 +315,7 @@ public class ProductosModel extends Conexion {
 		}
 	}
 
-	public void agregarInventario(float cantidad){
+	public void agregarInventario(float cantidad) {
 		this.cn = conexion();
 		this.consulta = "UPDATE productos SET stock = stock + ? WHERE id = ?";
 		try {
@@ -304,12 +323,12 @@ public class ProductosModel extends Conexion {
 			this.pst.setFloat(1, cantidad);
 			this.pst.setInt(2, this.id);
 			this.banderin = this.pst.executeUpdate();
-			if(this.banderin > 0){
+			if (this.banderin > 0) {
 				JOptionPane.showMessageDialog(null, "Inventario agrgado con exito.");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally{
+		} finally {
 			try {
 				this.cn.close();
 			} catch (SQLException ex) {

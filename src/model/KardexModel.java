@@ -5,6 +5,7 @@
  */
 package model;
 
+import controller.MenuController;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,8 +19,8 @@ public class KardexModel extends Conexion {
 
 	private int producto, empleado;
 	private float cantidad, inventarioInicial, salidas, entradas;
-	private String accion, consulta;
-	private Timestamp fecha;
+	private String nota, consulta;
+	private String tipoMovimiento;
 
 	private Statement st;
 	private PreparedStatement pst;
@@ -57,20 +58,12 @@ public class KardexModel extends Conexion {
 		this.cantidad = cantidad;
 	}
 
-	public String getAccion() {
-		return accion;
+	public void setTipoMovimiento(String tipoMovimietoK) {
+		this.tipoMovimiento = tipoMovimietoK;
 	}
 
-	public void setAccion(String accion) {
-		this.accion = accion;
-	}
-
-	public Timestamp getFecha() {
-		return fecha;
-	}
-
-	public void setFecha(Timestamp fecha) {
-		this.fecha = fecha;
+	public void setFecha(String nota) {
+		this.nota= nota;
 	}
 
 	public float getInventarioInicial() {
@@ -97,16 +90,21 @@ public class KardexModel extends Conexion {
 		this.salidas = salidas;
 	}
 
+	public void setNota(String nota) {
+		this.nota = nota;
+	}
+	
+
 	public void guardar() {
 		this.cn = conexion();
-		this.consulta = "INSERT INTO kardex(producto,cantidad,fecha,accion,empleado) VALUES(?,?,?,?,?)";
+		this.consulta = "call crearMovimientoKardex(?,?,?,?,?)";
 		try {
 			this.pst = this.cn.prepareStatement(this.consulta);
 			this.pst.setInt(1, this.producto);
 			this.pst.setFloat(2, this.cantidad);
-			this.pst.setTimestamp(3, this.fecha);
-			this.pst.setString(4, this.accion);
-			this.pst.setInt(5, this.empleado);
+			this.pst.setString(3, this.tipoMovimiento);
+			this.pst.setString(4, this.nota);
+			this.pst.setInt(5, MenuController.empleadoSistema);
 			this.pst.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();

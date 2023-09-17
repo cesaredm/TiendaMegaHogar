@@ -28,7 +28,7 @@ public class MenuController implements MouseListener, KeyListener {
 	CreditosModel creditosModel;
 	FacturacionModel facturacionModel;
 	
-	public static int empleadoSistema;
+	public static int empleadoSistema; //USUARIO global del sistema
 
 	public MenuController(PrincipalView menu, String usuario, int empleado) {
 		this.menu = menu;

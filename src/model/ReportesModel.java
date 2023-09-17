@@ -29,6 +29,7 @@ public class ReportesModel extends Conexion {
 	ResultSet rs;
 	Connection cn;
 	String consulta;
+	public int factura;
 
 	public float getVentasDiariasContado() {
 		return ventasDiariasContado;
@@ -181,11 +182,58 @@ public class ReportesModel extends Conexion {
 		}
 	}
 
-	public void getDetallesFacturas(int id){
-		
+	public void getDetallesFacturas(int id , String tipo){
+		this.consulta = tipo=="factura" ? 
+			"SELECT * FROM detallesfacturas WHERE factura = ?" :
+			"SELECT * FROM detallesfacturas WHERE comprobante = ?";
+		this.cn = conexion();
+		String[] titulos = {"N. DETALLE", "DESCRIP.", "CANTIDAD", "PRECIO", "IMPORTE"};
+		String[] data = new String[5];
+		this.tableModel = new DefaultTableModel(null, titulos) {
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				return false;
+			}
+		};
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setInt(1, id);
+			this.rs = this.pst.executeQuery();
+			while (this.rs.next()) {
+				data[0] = this.rs.getString("id");
+				data[1] = this.rs.getString("descripcion");
+				data[2] = this.rs.getString("cantidad");
+				data[3] = this.rs.getString("precio");
+				data[4] = this.rs.getString("importe");
+				this.tableModel.addRow(data);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (SQLException ex) {
+				Logger.getLogger(ReportesModel.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
 	}
-
-	public void getDetallesComprobantes(int id){
-
-	}
+	
+	public void devolver(int detalle, float importe, float cantidad){
+		this.cn = conexion();
+		this.consulta = "CALL devolucion(?,?,?)";
+		try {
+			this.pst = this.cn.prepareStatement(this.consulta);
+			this.pst.setInt(1, detalle);
+			this.pst.setFloat(2, importe);
+			this.pst.setFloat(3, cantidad);
+			this.pst.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				this.cn.close();
+			} catch (Exception e) {
+			}
+		}
+	} 
 }

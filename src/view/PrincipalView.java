@@ -133,6 +133,16 @@ public class PrincipalView extends javax.swing.JFrame {
                 jdDetalles = new javax.swing.JDialog();
                 jScrollPane29 = new javax.swing.JScrollPane();
                 tblDetalles = new javax.swing.JTable();
+                btnDevolverFactura = new javax.swing.JButton();
+                jdMovKardex = new javax.swing.JDialog();
+                cmbTipoMovimientoKardex = new javax.swing.JComboBox<>();
+                jScrollPane30 = new javax.swing.JScrollPane();
+                txtAreaNotaMovimientoKardex = new javax.swing.JTextArea();
+                jsCantidadMovimientoKardex = new javax.swing.JSpinner();
+                jLabel98 = new javax.swing.JLabel();
+                jLabel101 = new javax.swing.JLabel();
+                jLabel102 = new javax.swing.JLabel();
+                btnGuardarMovimientoKardex = new javax.swing.JButton();
                 pnlMenuLateral = new javax.swing.JPanel();
                 jLabel1 = new javax.swing.JLabel();
                 jSeparator1 = new javax.swing.JSeparator();
@@ -1089,15 +1099,92 @@ public class PrincipalView extends javax.swing.JFrame {
                 tblDetalles.setRowHeight(24);
                 jScrollPane29.setViewportView(tblDetalles);
 
+                btnDevolverFactura.setBackground(new java.awt.Color(0, 102, 255));
+                btnDevolverFactura.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnDevolverFactura.setForeground(new java.awt.Color(255, 255, 255));
+                btnDevolverFactura.setText("Devolver");
+                btnDevolverFactura.setActionCommand("btnDevolverFactura");
+
                 javax.swing.GroupLayout jdDetallesLayout = new javax.swing.GroupLayout(jdDetalles.getContentPane());
                 jdDetalles.getContentPane().setLayout(jdDetallesLayout);
                 jdDetallesLayout.setHorizontalGroup(
                         jdDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jScrollPane29, javax.swing.GroupLayout.DEFAULT_SIZE, 1165, Short.MAX_VALUE)
+                        .addGroup(jdDetallesLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(btnDevolverFactura)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 );
                 jdDetallesLayout.setVerticalGroup(
                         jdDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane29, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jdDetallesLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(btnDevolverFactura)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane29, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE))
+                );
+
+                jdMovKardex.setTitle("Realizar Movimiento de kardex");
+
+                cmbTipoMovimientoKardex.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                cmbTipoMovimientoKardex.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Entrada", "Salida" }));
+
+                txtAreaNotaMovimientoKardex.setColumns(20);
+                txtAreaNotaMovimientoKardex.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                txtAreaNotaMovimientoKardex.setRows(5);
+                jScrollPane30.setViewportView(txtAreaNotaMovimientoKardex);
+
+                jsCantidadMovimientoKardex.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+                jLabel98.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                jLabel98.setText("Tipo de movimiento");
+
+                jLabel101.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                jLabel101.setText("Nota");
+
+                jLabel102.setText("cantidad");
+
+                btnGuardarMovimientoKardex.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+                btnGuardarMovimientoKardex.setText("Aceptar");
+                btnGuardarMovimientoKardex.setActionCommand("btnGuardarMovimientoKardex");
+
+                javax.swing.GroupLayout jdMovKardexLayout = new javax.swing.GroupLayout(jdMovKardex.getContentPane());
+                jdMovKardex.getContentPane().setLayout(jdMovKardexLayout);
+                jdMovKardexLayout.setHorizontalGroup(
+                        jdMovKardexLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jdMovKardexLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jdMovKardexLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jScrollPane30, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                                        .addGroup(jdMovKardexLayout.createSequentialGroup()
+                                                .addGroup(jdMovKardexLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel98)
+                                                        .addComponent(cmbTipoMovimientoKardex, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(jLabel101)
+                                                        .addComponent(jLabel102)
+                                                        .addComponent(jsCantidadMovimientoKardex, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(btnGuardarMovimientoKardex))
+                                                .addGap(0, 0, Short.MAX_VALUE)))
+                                .addContainerGap())
+                );
+                jdMovKardexLayout.setVerticalGroup(
+                        jdMovKardexLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jdMovKardexLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jLabel98)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cmbTipoMovimientoKardex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel101)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane30, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel102)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jsCantidadMovimientoKardex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnGuardarMovimientoKardex)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 );
 
                 setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -3725,6 +3812,7 @@ public class PrincipalView extends javax.swing.JFrame {
         public javax.swing.JButton btnAgregarProductoFacturacion;
         public javax.swing.JButton btnAgregarProductoPedido;
         public javax.swing.JButton btnBuscarArticuloFacturacion;
+        public javax.swing.JButton btnDevolverFactura;
         public javax.swing.JButton btnEliminarArtPedido;
         public javax.swing.JButton btnEliminarArticuloFacturacion;
         public javax.swing.JButton btnGuardarCliente;
@@ -3733,6 +3821,7 @@ public class PrincipalView extends javax.swing.JFrame {
         public javax.swing.JButton btnGuardarFacturacion;
         public javax.swing.JButton btnGuardarImprimirFacturacion;
         public javax.swing.JButton btnGuardarMarca;
+        public javax.swing.JButton btnGuardarMovimientoKardex;
         public javax.swing.JButton btnGuardarPago;
         public javax.swing.JButton btnGuardarPagoPedido;
         public javax.swing.JButton btnGuardarPedido;
@@ -3756,10 +3845,13 @@ public class PrincipalView extends javax.swing.JFrame {
         public javax.swing.JComboBox<String> cmbMarcasProducto;
         public javax.swing.JComboBox<String> cmbPermisoUsuario;
         public javax.swing.JComboBox<String> cmbTipoComprobante;
+        public javax.swing.JComboBox<String> cmbTipoMovimientoKardex;
         private javax.swing.JDesktopPane jDesktopPane1;
         private javax.swing.JLabel jLabel1;
         private javax.swing.JLabel jLabel10;
         private javax.swing.JLabel jLabel100;
+        private javax.swing.JLabel jLabel101;
+        private javax.swing.JLabel jLabel102;
         private javax.swing.JLabel jLabel11;
         private javax.swing.JLabel jLabel12;
         private javax.swing.JLabel jLabel13;
@@ -3855,6 +3947,7 @@ public class PrincipalView extends javax.swing.JFrame {
         private javax.swing.JLabel jLabel95;
         private javax.swing.JLabel jLabel96;
         private javax.swing.JLabel jLabel97;
+        private javax.swing.JLabel jLabel98;
         private javax.swing.JLabel jLabel99;
         private javax.swing.JPanel jPanel1;
         private javax.swing.JPanel jPanel10;
@@ -3901,6 +3994,7 @@ public class PrincipalView extends javax.swing.JFrame {
         private javax.swing.JScrollPane jScrollPane28;
         private javax.swing.JScrollPane jScrollPane29;
         private javax.swing.JScrollPane jScrollPane3;
+        private javax.swing.JScrollPane jScrollPane30;
         private javax.swing.JScrollPane jScrollPane4;
         private javax.swing.JScrollPane jScrollPane5;
         private javax.swing.JScrollPane jScrollPane6;
@@ -3930,10 +4024,12 @@ public class PrincipalView extends javax.swing.JFrame {
         public javax.swing.JDialog jdHistorialCredito;
         public javax.swing.JDialog jdIngresarPago;
         public javax.swing.JDialog jdKardex;
+        public javax.swing.JDialog jdMovKardex;
         public javax.swing.JDialog jdProductosFacturacion;
         public javax.swing.JDialog jdProveedorPedido;
         public javax.swing.JInternalFrame jifMarca;
         public javax.swing.JSpinner jsAvalCredito;
+        public javax.swing.JSpinner jsCantidadMovimientoKardex;
         public javax.swing.JSpinner jsCantidadProducto;
         public javax.swing.JSpinner jsCantidadProductoPedido;
         public javax.swing.JSpinner jsCantidadProductoPedidos;
@@ -4036,6 +4132,7 @@ public class PrincipalView extends javax.swing.JFrame {
         public javax.swing.JTextField txtApellidosCliente;
         public javax.swing.JTextField txtApellidosEmpleado;
         public javax.swing.JTextArea txtAreaDireccionExactaCliente;
+        public javax.swing.JTextArea txtAreaNotaMovimientoKardex;
         public javax.swing.JTextField txtAvalCredito;
         public javax.swing.JTextField txtBarrioCliente;
         public javax.swing.JTextField txtBuscarAvalCredito;
